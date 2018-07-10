@@ -1,28 +1,9 @@
 import random, os, time, pygame, sys
 from pygame.locals import *
 from setup import *
+from itemsJuego import *
 
 
-
-class ItemsJuego(pygame.sprite.Sprite):
-	def __init__(self, img, vocal):
-		super().__init__()
-		img = pygame.image.load(img)
-		self.image = pygame.transform.scale(img, (100, 100))
-		self.vocal = vocal
-		self.rect = self.image.get_rect()
-		
-	def getX(self):
-		return self.rect.x
-	
-	def setX(self, x):
-		self.rect.x = x
-	
-	def getY(self):
-		return self.rect.y
-	
-	def setY(self, y):
-		self.rect.y = y
 
 CANT_IMAGENES_PANTALLA = 4
 
@@ -33,7 +14,7 @@ def cargarSpriteVocales(G_Vocales):
 	for imgVocal in os.listdir('Imagenes/vocales'):
 		nuevoItem = ItemsJuego('Imagenes/vocales/'+imgVocal, imgVocal[0])
 		despl_x += V_ANCHO / 6
-		nuevoItem.setX(x)
+		nuevoItem.setX(despl_x)
 		nuevoItem.setY(V_LARGO - 200)
 		G_Vocales.add(nuevoItem)
 	
@@ -45,7 +26,7 @@ def cargarSpriteObjetos(G_Objetos, L_img):
 		img = L_img[i]
 		nuevoItem = ItemsJuego('Imagenes/comienzanConVocal/'+img, img[0])
 		despl_x += V_ANCHO / 6
-		nuevoItem.setX(x)
+		nuevoItem.setX(despl_x)
 		nuevoItem.setY(V_LARGO/3)		
 		G_Objetos.add(nuevoItem)
 		
@@ -65,13 +46,25 @@ def main():
 	G_Objetos.draw(pantalla)
 	pygame.display.update()
 	
+	L_Objetos = G_Objetos.sprites()
+	
 	## LOOP PRINCIPAL
 	while True:
-		for event in pygame.event.get():
-			if event.type == QUIT:
+		Qeventos = pygame.event.get()
+		for evento in Qeventos:
+			if evento.type == QUIT:
 				pygame.quit()
 				sys.exit()
-		
+			elif evento.type == MOUSEBUTTONDOWN and event.button == 1:
+				if L_Objetos[0].collidepoint((event.pos[0],event.pos[1])):
+					seleccionado = L_Objetos[0]
+					
+			elif evento.type == MOUSEBUTTONUP and event.button == 1:
+				seleccionado = None
+				
+			elif evento.type == MOUSEMOTION and seleccionado:
+				seleccionado
+
 
 
 if __name__ == '__main__':

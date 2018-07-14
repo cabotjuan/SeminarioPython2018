@@ -1,25 +1,26 @@
 import random, os, time, pygame, sys
 from pygame.locals import *
 from setup import *
-from itemsJuego import *
+from itemsJuego2 import *
 
 
 
 CANT_IMAGENES_PANTALLA = 4
 
-###	CARGAR SPRITES DE LAS VOCALES.
+###	CARGAR IMG DE LAS VOCALES.
 
-def cargarSpriteVocales(G_Vocales):
+def cargarVocales(L_Vocales):
 	despl_x = 10
 	for imgVocal in os.listdir('Imagenes/vocales'):
 		nuevoItem = ItemsJuego('Imagenes/vocales/'+imgVocal, imgVocal[0])
 		despl_x += V_ANCHO / 6
 		nuevoItem.setX(despl_x)
 		nuevoItem.setY(V_LARGO - 200)
-		G_Vocales.add(nuevoItem)
+		L_Vocales.append(nuevoItem)
+		pantalla.blit(nuevoItem.image, nuevoItem.rect)
 	
-## CARGAR SPRITES DE LOS OBJETOS A ARRASTRAR.
-def cargarSpriteObjetos(G_Objetos, L_img):
+## CARGAR LA IMG DE LOS OBJETOS A ARRASTRAR.
+def cargarObjetos(L_Objetos, L_img):
 	despl_x = 10
 	for j in range(CANT_IMAGENES_PANTALLA):
 		i = random.randrange(0, len(L_img)-1)
@@ -28,25 +29,20 @@ def cargarSpriteObjetos(G_Objetos, L_img):
 		despl_x += V_ANCHO / 6
 		nuevoItem.setX(despl_x)
 		nuevoItem.setY(V_LARGO/3)		
-		G_Objetos.add(nuevoItem)
-		
+		L_Objetos.append(nuevoItem)
+		pantalla.blit(nuevoItem.image, nuevoItem.rect)
 		del L_img[i]
 
 def main():
 	fin_juego = False
 	L_img = os.listdir('Imagenes/comienzanConVocal')
 	
-	G_Vocales = pygame.sprite.Group()
-	G_Objetos = pygame.sprite.Group()
+	L_Vocales = []
+	L_Objetos = []
 	
-	cargarSpriteVocales(G_Vocales)
-	cargarSpriteObjetos(G_Objetos, L_img)
-	
-	G_Vocales.draw(pantalla)
-	G_Objetos.draw(pantalla)
+	cargarVocales(L_Vocales)
+	cargarObjetos(L_Objetos, L_img)
 	pygame.display.update()
-	
-	L_Objetos = G_Objetos.sprites()
 	seleccionado = None
 	## LOOP PRINCIPAL
 	while True:
@@ -56,16 +52,30 @@ def main():
 				pygame.quit()
 				sys.exit()
 			elif evento.type == MOUSEBUTTONDOWN and evento.button == 1:
-				if L_Objetos[0].collidepoint((evento.pos[0],evento.pos[1])):
+				if L_Objetos[0].rect.collidepoint((evento.pos[0],evento.pos[1])):
 					seleccionado = L_Objetos[0]
+				if L_Objetos[1].rect.collidepoint((evento.pos[0],evento.pos[1])):
+					seleccionado = L_Objetos[1]
+				if L_Objetos[2].rect.collidepoint((evento.pos[0],evento.pos[1])):
+					seleccionado = L_Objetos[2]
+				if L_Objetos[3].rect.collidepoint((evento.pos[0],evento.pos[1])):
+					seleccionado = L_Objetos[3]
+				print('se selecciono obj')
 					
 			elif evento.type == MOUSEBUTTONUP and evento.button == 1:
 				seleccionado = None
 				
+				print('se levanta el mouse')
+				
 			elif evento.type == MOUSEMOTION and seleccionado:
-				seleccionado.centerx = evento.pos[0]
-				seleccionado.centery = evento.pos[1]
-
+				seleccionado.rect.centerx = evento.pos[0]
+				seleccionado.rect.centery = evento.pos[1]
+				pantalla.blit(seleccionado.image, seleccionado.rect)
+				print('x'+str(seleccionado.getX())+'y'+str(seleccionado.getY()))
+				print('arrastrando..')
+		pygame.display.update()
+		
 
 if __name__ == '__main__':
 	main()
+

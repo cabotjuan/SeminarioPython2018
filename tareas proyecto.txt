@@ -1,0 +1,17 @@
+JUEGOS
+    COME VOCALES arrastrar dibujos a la vocal con la que comienzan.
+    ACOMODO Y FORMO: acomodar letras o silabas y formar la palabra
+    EL ENTROMETIDO: descartar dibujos o palabras.
+    CADA UNA EN SU LUGAR: asociar palabras en la imagen que corresponde.
+
+
+- Menu principal:
+    - Botones:
+        . Musica -- > ON off
+        . jugar
+            . Elegir juegos
+        . salir 
+    
+    - mostrar MAX puntaje de c/juego 
+ 
+    

@@ -9,18 +9,22 @@ CANT_IMAGENES_PANTALLA = 4
 
 ###	CARGAR IMG DE LAS VOCALES.
 
+
+
 def cargarVocales(L_Vocales):
 	despl_x = 10
 	for imgVocal in os.listdir('Imagenes/vocales'):
 		
 		nuevoItem = ItemsJuego('Imagenes/vocales/'+imgVocal, imgVocal[0], 125, 125)
 		despl_x += V_ANCHO / 6
+		
 		nuevoItem.setX(despl_x)
 		nuevoItem.setY(V_LARGO - 200)
 
 		L_Vocales.append(nuevoItem)
 		pantalla.blit(nuevoItem.image, nuevoItem.rect)
-	
+		
+		
 ## CARGAR LA IMG DE LOS OBJETOS A ARRASTRAR.
 def cargarObjetos(L_Objetos, L_img):
 	

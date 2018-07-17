@@ -1,17 +1,37 @@
-import random, time, pygame, sys, comeVocales
+import random, time, pygame, sys, comeVocales, os
 from pygame.locals import *
 from setup import *
+from itemsJuego import *
 
 
 
 def cargarMenu():
 	
-	pygame.draw.rect(pantalla, pygame.Color("blue"), (V_ANCHO/3, V_LARGO/9 ,350, 100), 0)
+	#pygame.draw.rect(pantalla, pygame.Color("blue"), (V_ANCHO/3, V_LARGO/9 ,350, 100), 0)
 	
-	pygame.draw.rect(pantalla, pygame.Color("pink"), (V_ANCHO/2.5, V_LARGO/3 ,250, 75), 0)
+	#pygame.draw.rect(pantalla, pygame.Color("pink"), (V_ANCHO/2.5, V_LARGO/53 ,250, 75), 0)
 	
 	
 	
+	l_botones =[]
+	desplY = 200
+	for boton in sorted(os.listdir('Imagenes/botones')):
+		
+		boton= ItemsJuegoGenerica('Imagenes/botones/'+boton, 250, 75)
+		
+		desplY += V_ANCHO / 9
+		
+		boton.setX(V_ANCHO/2)
+		boton.setY(desplY)
+		
+		l_botones.append(boton)
+		
+		pantalla.blit(boton.image, boton.rect)
+	
+	
+	pygame.display.update()
+	
+	return l_botones
 	
 def menuPrincipal():	
 	# MAIN LOOP 
@@ -26,12 +46,29 @@ def menuPrincipal():
 	
 	#pantalla.blit(titulo, titulo_rect)
 	
-	cargarMenu()
+	
+	botonJugar = ItemsJuegoGenerica('Imagenes/Jugar.png', 250, 75)
+	botonJugar.rect.center = (V_ANCHO/2, V_LARGO/6)
+	
+	pantalla.blit(botonJugar.image, botonJugar.rect)
+	
+	botonPuntos = ItemsJuegoGenerica('Imagenes/misPuntos.png', 250, 75)
+	botonPuntos.rect.center = (V_ANCHO/2, V_LARGO/3)
+	
+	pantalla.blit(botonPuntos.image, botonPuntos.rect)
+	
 	pygame.display.update()
+	
+	print(pygame.display.Info().current_h)
+	
+	
+	
 	
 	
 	
 	while True:
+		
+		presionado = None
 		#Event Queue
 		Qeventos = pygame.event.get()
 		
@@ -39,12 +76,36 @@ def menuPrincipal():
 			if evento.type == QUIT:
 				terminarPrograma()
 				
-			elif evento.type == KEYDOWN:
-				if evento.key == K_ESCAPE:
-					terminarPrograma()
+			elif evento.type == MOUSEBUTTONDOWN and evento.button == 1:
 				
-				if evento.key == K_1:
-					comeVocales2.main()
+				
+				if botonJugar.rect.collidepoint(evento.pos[0],evento.pos[1]):
+					
+					presionado = ItemsJuegoGenerica('Imagenes/botones_presionados/comeVocalesPresionado.png', 250, 75)
+					presionado.setX(botonJugar.getX())
+					presionado.setY(botonJugar.getY())
+					
+					pantalla.blit(presionado.image, presionado.rect)
+				
+					
+					l=cargarMenu()
+					
+				
+				if l[0].rect.collidepoint((evento.pos[0],evento.pos[1])):
+					
+					presionado = ItemsJuegoGenerica('Imagenes/botones_presionados/comeVocalesPresionado.png', 250, 75)
+					presionado.setX(l[0].getX())
+					presionado.setY(l[0].getY())
+					
+					pantalla.blit(presionado.image, presionado.rect)
+					
+					pygame.display.update()
+					
+					
+					
+			elif evento.type == MOUSEBUTTONUP and evento.button == 1:
+				if l[0].rect.collidepoint((evento.pos[0],evento.pos[1])):
+					comeVocales.main()		
 
 def main():
 	pygame.init()

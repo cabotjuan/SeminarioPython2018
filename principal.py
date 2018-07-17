@@ -13,6 +13,7 @@ def cargarMenu():
 	
 	
 	
+	
 	l_botones =[]
 	desplY = 200
 	for boton in sorted(os.listdir('Imagenes/botones')):
@@ -47,6 +48,8 @@ def menuPrincipal():
 	#pantalla.blit(titulo, titulo_rect)
 	
 	
+	p_base= pantalla.copy()
+	
 	botonJugar = ItemsJuegoGenerica('Imagenes/Jugar.png', 250, 75)
 	botonJugar.rect.center = (V_ANCHO/2, V_LARGO/6)
 	
@@ -64,13 +67,14 @@ def menuPrincipal():
 	
 	
 	
-	
+	l=[]
 	
 	while True:
 		
 		presionado = None
 		#Event Queue
 		Qeventos = pygame.event.get()
+	
 		
 		for evento in Qeventos:
 			if evento.type == QUIT:
@@ -81,17 +85,20 @@ def menuPrincipal():
 				
 				if botonJugar.rect.collidepoint(evento.pos[0],evento.pos[1]):
 					
-					presionado = ItemsJuegoGenerica('Imagenes/botones_presionados/comeVocalesPresionado.png', 250, 75)
+					presionado = ItemsJuegoGenerica('Imagenes/JugarPresionado.png', 250, 75)
 					presionado.setX(botonJugar.getX())
 					presionado.setY(botonJugar.getY())
 					
 					pantalla.blit(presionado.image, presionado.rect)
 				
+					pygame.display.update()
+
 					
-					l=cargarMenu()
+					
+					
 					
 				
-				if l[0].rect.collidepoint((evento.pos[0],evento.pos[1])):
+				elif l[0].rect.collidepoint((evento.pos[0],evento.pos[1])):
 					
 					presionado = ItemsJuegoGenerica('Imagenes/botones_presionados/comeVocalesPresionado.png', 250, 75)
 					presionado.setX(l[0].getX())
@@ -104,8 +111,19 @@ def menuPrincipal():
 					
 					
 			elif evento.type == MOUSEBUTTONUP and evento.button == 1:
-				if l[0].rect.collidepoint((evento.pos[0],evento.pos[1])):
-					comeVocales.main()		
+				if botonJugar.rect.collidepoint(evento.pos[0],evento.pos[1]):
+					
+					pantalla.blit(p_base , (0,0))
+					pygame.display.update()
+					l=cargarMenu()
+				
+				elif l[0].rect.collidepoint((evento.pos[0],evento.pos[1])):
+					comeVocales.main()	
+					
+				#else : 
+					
+				
+					
 
 def main():
 	pygame.init()

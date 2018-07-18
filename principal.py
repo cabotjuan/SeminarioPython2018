@@ -30,32 +30,30 @@ def cargarMenuJugar():
 	return l_botones
 	
 def menuPrincipal():	
-	# MAIN LOOP 
+
 	
-	#fuente = pygame.font.Font(None, 32)
-	#t_titulo = 'Comenzar a jugar'
-	#titulo = fuente.render(t_titulo, True, pygame.Color("pink"))
+	itemFondo = ItemsJuegoGenerica('Imagenes/Fondo.jpg', V_ANCHO, V_LARGO)
+	itemFondo.setX(V_ANCHO/2)
+	itemFondo.setY(0)
 	
-	#titulo_rect = titulo.get_rect()
+	pantalla.blit (itemFondo.image, itemFondo.rect)
+	pygame.display.update()
 	
-	#titulo_rect.centerx = pantalla.get_rect().centerx
-	
-	#pantalla.blit(titulo, titulo_rect)
 	
 	botonSalir = ItemsJuegoGenerica('Imagenes/salir.png', 75, 75)
 	botonSalir.setX(V_ANCHO/24)
 	botonSalir.setY(V_LARGO-75)
-	pantalla.blit(botonSalir.image, botonSalir.rect)
+	pantalla.blit(botonSalir.image, botonSalir.rect)###BOTON SALIR###
 	
-	botonMusica = ItemsJuegoGenerica('Imagenes/musica.png', 75, 75)
+	botonMusica = ItemsJuegoGenerica('Imagenes/sonido.png', 75, 75)
 	botonMusica.setX(V_ANCHO-60)
 	botonMusica.setY(V_LARGO-75)
-	pantalla.blit(botonMusica.image, botonMusica.rect)
+	pantalla.blit(botonMusica.image, botonMusica.rect)###BOTON MUSICA###
 
-	botonMenu = ItemsJuegoGenerica('Imagenes/menu.png', 75, 75)
+	botonMenu = ItemsJuegoGenerica('Imagenes/inicio.png', 75, 75)
 	botonMenu.setX(V_ANCHO/8)
 	botonMenu.setY(V_LARGO-75)
-	pantalla.blit(botonMenu.image, botonMenu.rect)
+	pantalla.blit(botonMenu.image, botonMenu.rect)###BOTON MENU###
 	
 	estado_menu = 'principal'
 	
@@ -63,20 +61,19 @@ def menuPrincipal():
 	
 	botonJugar = ItemsJuegoGenerica('Imagenes/Jugar.png', 250, 75)
 	botonJugar.rect.center = (V_ANCHO/2, V_LARGO/2) #boton de jugar
-	
 	pantalla.blit(botonJugar.image, botonJugar.rect)
 	
 	botonPuntos = ItemsJuegoGenerica('Imagenes/misPuntos.png', 250, 75)
 	botonPuntos.rect.center = (V_ANCHO/2, V_LARGO/1.5)#boton de puntos
-	
 	pantalla.blit(botonPuntos.image, botonPuntos.rect)
 	
 	pygame.display.update()
 	
-	
+	p_menuP = pantalla.copy()
 	
 	l_botones_juegos = cargarMenuJugar()
-	p_menuP = pantalla.copy()
+	
+	
 	 
 	while True:
 		
@@ -99,7 +96,15 @@ def menuPrincipal():
 					
 					pantalla.blit(presionado.image, presionado.rect)
 				
-					pygame.display.update()
+					
+				elif botonPuntos.rect.collidepoint(evento.pos[0],evento.pos[1])and estado_menu == 'principal':
+					
+					presionado = ItemsJuegoGenerica('Imagenes/misPuntosPresionado.png', 250, 75)
+					presionado.setX(botonPuntos.getX())
+					presionado.setY(botonPuntos.getY())
+					
+					pantalla.blit(presionado.image, presionado.rect)
+				
 					
 				
 				elif l_botones_juegos[0].rect.collidepoint((evento.pos[0],evento.pos[1])):
@@ -110,7 +115,6 @@ def menuPrincipal():
 					
 					pantalla.blit(presionado.image, presionado.rect)
 				
-					pygame.display.update()
 					
 				elif l_botones_juegos[1].rect.collidepoint((evento.pos[0],evento.pos[1])):
 					
@@ -138,6 +142,30 @@ def menuPrincipal():
 					presionado.setY(l_botones_juegos[3].getY())
 					
 					pantalla.blit(presionado.image, presionado.rect)
+					
+				elif botonMusica.rect.collidepoint(evento.pos[0],evento.pos[1]):
+					
+					presionado = ItemsJuegoGenerica('Imagenes/sonidoPresionado.png', 75, 75)
+					presionado.setX(botonMusica.getX())
+					presionado.setY(botonMusica.getY())
+					
+					pantalla.blit(presionado.image, presionado.rect)
+
+				#elif botonSalir.rect.collidepoint(evento.pos[0],evento.pos[1]):
+					
+					#presionado = ItemsJuegoGenerica('Imagenes/salirPresionado.png', 75, 75)
+					#presionado.setX(botonSalir.getX())
+					#presionado.setY(botonSalir.getY())
+					
+					#pantalla.blit(presionado.image, presionado.rect)
+				
+				elif botonMenu.rect.collidepoint(evento.pos[0],evento.pos[1]):
+					
+					presionado = ItemsJuegoGenerica('Imagenes/inicioPresionado.png', 75, 75)
+					presionado.setX(botonMenu.getX())
+					presionado.setY(botonMenu.getY())
+					
+					pantalla.blit(presionado.image, presionado.rect)
 				
 				
 				pygame.display.update()
@@ -162,20 +190,41 @@ def menuPrincipal():
 					pantalla.blit(p_base , (0,0))
 					pygame.display.update()
 					comeVocales.main()	
+
+				#elif botonMusica.rect.collidepoint(evento.pos[0],evento.pos[1]):
+					
+					######## PONER SONIDO ##########
+
+				elif botonSalir.rect.collidepoint(evento.pos[0],evento.pos[1]):
+					
+					terminarPrograma()
+				
+				elif botonMenu.rect.collidepoint(evento.pos[0],evento.pos[1]):
+					
+					pantalla.blit(p_menuP, (0,0))
+					pygame.display.update()
+					
+					estado_menu = 'principal'
+					
 				elif estado_menu == 'principal': 
 					#Reestablecer botones cuando se presiona pero se cancela...
 					pantalla.blit(p_menuP, (0,0))
+					
 				elif estado_menu == 'jugar':
 					pantalla.blit(p_jugar, (0,0))
+				
+					
 				pygame.display.update()
+				
+				
+
+
 
 def main():
 	pygame.init()
 	menuPrincipal()
 	
-def terminarPrograma():
-	pygame.quit()
-	sys.exit()
+
 
 if __name__ == '__main__':
     main()

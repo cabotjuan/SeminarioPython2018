@@ -2,6 +2,7 @@ import random, os, time, pygame, sys
 from pygame.locals import *
 from setup import *
 from itemsJuego import *
+from principal import *
 
 
 
@@ -47,6 +48,26 @@ def cargarObjetos(L_Objetos, L_img):
 		del L_img[i]
 
 def main():
+	
+	p_base = pantalla.copy()
+	
+	#pantalla.fill((50,50,50))
+	
+	botonSalir = ItemsJuegoGenerica('Imagenes/salir.png', 75, 75)
+	botonSalir.setX(V_ANCHO/24)
+	botonSalir.setY(V_LARGO-75)
+	pantalla.blit(botonSalir.image, botonSalir.rect)###BOTON SALIR###
+	
+	botonMusica = ItemsJuegoGenerica('Imagenes/sonido.png', 75, 75)
+	botonMusica.setX(V_ANCHO-60)
+	botonMusica.setY(V_LARGO-75)
+	pantalla.blit(botonMusica.image, botonMusica.rect)###BOTON MUSICA###
+
+	botonMenu = ItemsJuegoGenerica('Imagenes/inicio.png', 75, 75)
+	botonMenu.setX(V_ANCHO/8)
+	botonMenu.setY(V_LARGO-75)
+	pantalla.blit(botonMenu.image, botonMenu.rect)###BOTON MENU###
+	
 	fin_juego = False
 	
 	
@@ -56,11 +77,16 @@ def main():
 	
 	L_img = os.listdir('Imagenes/comienzanConVocal')
 	
-	pantalla.fill((50,50,50))
+	
+	
 	cargarVocales(L_Vocales)
-	p_base = pantalla.copy()
+	
+	p_base_vocales = pantalla.copy()
+	
 	cargarObjetos(L_Objetos, L_img)
+	
 	pygame.display.update()
+	
 	seleccionado = None
 	
 	for i in range(len(L_Objetos)):
@@ -90,7 +116,18 @@ def main():
 				if seleccionado:
 					copia_x = seleccionado.getX()
 					copia_y = seleccionado.getY()
-				print('se selecciono obj')
+				#print('se selecciono obj')
+				
+				elif botonMenu.rect.collidepoint(evento.pos[0],evento.pos[1]):
+					presionado = ItemsJuegoGenerica('Imagenes/inicioPresionado.png', 75, 75)
+					presionado.setX(botonMenu.getX())
+					presionado.setY(botonMenu.getY())
+					
+					pantalla.blit(presionado.image, presionado.rect)
+					
+				
+			
+			
 					
 			elif evento.type == MOUSEBUTTONUP and evento.button == 1:
 			
@@ -111,7 +148,7 @@ def main():
 						seleccionado.setX(copia_x)
 						seleccionado.setY(copia_y)
 						
-				pantalla.blit(p_base,(0,0))		
+				pantalla.blit(p_base_vocales,(0,0))		
 						
 				for i in range(0, len(L_Objetos)):
 					
@@ -119,9 +156,27 @@ def main():
 				p_conObj = pantalla.copy()	
 
 				seleccionado = None
-			
-						
+				
+				
+				#elif botonMusica.rect.collidepoint(evento.pos[0],evento.pos[1]):
 					
+					######## PONER SONIDO ##########
+
+				
+				if botonSalir.rect.collidepoint(evento.pos[0],evento.pos[1]):
+					
+					terminarPrograma()
+				
+				elif botonMenu.rect.collidepoint(evento.pos[0],evento.pos[1]):
+					
+					
+					
+					pantalla.blit(p_base, (0,0))
+					pygame.display.update()
+					menuPrincipal()
+					
+					
+			
 				
 				print('se levanta el mouse')
 				

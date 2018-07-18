@@ -87,7 +87,7 @@ def menuPrincipal():
 				terminarPrograma()
 				
 			elif evento.type == MOUSEBUTTONDOWN and evento.button == 1:
-				
+				S_Click.play()
 				if botonJugar.rect.collidepoint(evento.pos[0],evento.pos[1]) and estado_menu == 'principal':
 					
 					presionado = ItemsJuegoGenerica('Imagenes/JugarPresionado.png', 250, 75)

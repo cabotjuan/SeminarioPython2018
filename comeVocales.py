@@ -139,12 +139,14 @@ def main():
 					
 					if index != -1 and L_Vocales[index].vocal == seleccionado.vocal:
 						#===>Contar puntos aca<===
+						S_Correcto.play()
 						print ('borrado'+str(L_Objetos.index(seleccionado)))
 						del L_Objetos[L_Objetos.index(seleccionado)]
 						if not L_Objetos:
 							cargarObjetos(L_Objetos, L_img)	
 						
 					else:
+						S_Incorrecto.play()
 						seleccionado.setX(copia_x)
 						seleccionado.setY(copia_y)
 						

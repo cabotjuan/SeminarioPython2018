@@ -47,22 +47,36 @@ def menuPrincipal():
 	
 	#pantalla.blit(titulo, titulo_rect)
 	
+	botonSalir = ItemsJuegoGenerica('Imagenes/salir.png', 75, 75)
+	botonSalir.setX(V_ANCHO/24)
+	botonSalir.setY(V_LARGO-75)
+	pantalla.blit(botonSalir.image, botonSalir.rect)
+	
+	botonMusica = ItemsJuegoGenerica('Imagenes/musica.png', 75, 75)
+	botonMusica.setX(V_ANCHO-60)
+	botonMusica.setY(V_LARGO-75)
+	pantalla.blit(botonMusica.image, botonMusica.rect)
+
+	botonMenu = ItemsJuegoGenerica('Imagenes/menu.png', 75, 75)
+	botonMenu.setX(V_ANCHO/8)
+	botonMenu.setY(V_LARGO-75)
+	pantalla.blit(botonMenu.image, botonMenu.rect)
 	
 	p_base= pantalla.copy()
 	
 	botonJugar = ItemsJuegoGenerica('Imagenes/Jugar.png', 250, 75)
-	botonJugar.rect.center = (V_ANCHO/2, V_LARGO/2)
+	botonJugar.rect.center = (V_ANCHO/2, V_LARGO/2) #boton de jugar
 	
 	pantalla.blit(botonJugar.image, botonJugar.rect)
 	
 	botonPuntos = ItemsJuegoGenerica('Imagenes/misPuntos.png', 250, 75)
-	botonPuntos.rect.center = (V_ANCHO/2, V_LARGO/1.5)
+	botonPuntos.rect.center = (V_ANCHO/2, V_LARGO/1.5)#boton de puntos
 	
 	pantalla.blit(botonPuntos.image, botonPuntos.rect)
 	
 	pygame.display.update()
 	
-	print(pygame.display.Info().current_h)
+	
 	
 	
 	while True:
@@ -97,6 +111,7 @@ def menuPrincipal():
 					
 					pantalla.blit(presionado.image, presionado.rect)
 				
+					pygame.display.update()
 					
 				elif l[1].rect.collidepoint((evento.pos[0],evento.pos[1])):
 					
@@ -133,14 +148,15 @@ def menuPrincipal():
 			elif evento.type == MOUSEBUTTONUP and evento.button == 1:
 				if botonJugar.rect.collidepoint(evento.pos[0],evento.pos[1]):
 					
+					
 					pantalla.blit(p_base , (0,0))
 					pygame.display.update()
 					l=cargarMenu()
 				
 				elif l[0].rect.collidepoint((evento.pos[0],evento.pos[1])):
 					comeVocales.main()	
-					
-				#else : 
+				
+				
 					
 				
 					

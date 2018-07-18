@@ -51,12 +51,12 @@ def menuPrincipal():
 	p_base= pantalla.copy()
 	
 	botonJugar = ItemsJuegoGenerica('Imagenes/Jugar.png', 250, 75)
-	botonJugar.rect.center = (V_ANCHO/2, V_LARGO/6)
+	botonJugar.rect.center = (V_ANCHO/2, V_LARGO/2)
 	
 	pantalla.blit(botonJugar.image, botonJugar.rect)
 	
 	botonPuntos = ItemsJuegoGenerica('Imagenes/misPuntos.png', 250, 75)
-	botonPuntos.rect.center = (V_ANCHO/2, V_LARGO/3)
+	botonPuntos.rect.center = (V_ANCHO/2, V_LARGO/1.5)
 	
 	pantalla.blit(botonPuntos.image, botonPuntos.rect)
 	
@@ -64,10 +64,6 @@ def menuPrincipal():
 	
 	print(pygame.display.Info().current_h)
 	
-	
-	
-	
-	l=[]
 	
 	while True:
 		
@@ -82,7 +78,6 @@ def menuPrincipal():
 				
 			elif evento.type == MOUSEBUTTONDOWN and evento.button == 1:
 				
-				
 				if botonJugar.rect.collidepoint(evento.pos[0],evento.pos[1]):
 					
 					presionado = ItemsJuegoGenerica('Imagenes/JugarPresionado.png', 250, 75)
@@ -92,10 +87,6 @@ def menuPrincipal():
 					pantalla.blit(presionado.image, presionado.rect)
 				
 					pygame.display.update()
-
-					
-					
-					
 					
 				
 				elif l[0].rect.collidepoint((evento.pos[0],evento.pos[1])):
@@ -105,8 +96,37 @@ def menuPrincipal():
 					presionado.setY(l[0].getY())
 					
 					pantalla.blit(presionado.image, presionado.rect)
+				
 					
-					pygame.display.update()
+				elif l[1].rect.collidepoint((evento.pos[0],evento.pos[1])):
+					
+					presionado = ItemsJuegoGenerica('Imagenes/botones_presionados/acomodoYFormoPresionado.png', 250, 75)
+					presionado.setX(l[1].getX())
+					presionado.setY(l[1].getY())
+					
+					pantalla.blit(presionado.image, presionado.rect)					
+					
+					
+				elif l[2].rect.collidepoint((evento.pos[0],evento.pos[1])):
+					
+					presionado = ItemsJuegoGenerica('Imagenes/botones_presionados/elEntrometidoPresionado.png', 250, 75)
+					presionado.setX(l[2].getX())
+					presionado.setY(l[2].getY())
+					
+					pantalla.blit(presionado.image, presionado.rect)					
+					
+				
+				
+				elif l[3].rect.collidepoint((evento.pos[0],evento.pos[1])):
+					
+					presionado = ItemsJuegoGenerica('Imagenes/botones_presionados/enSuLugarPresionado.png', 250, 75)
+					presionado.setX(l[3].getX())
+					presionado.setY(l[3].getY())
+					
+					pantalla.blit(presionado.image, presionado.rect)
+				
+				
+				pygame.display.update()
 					
 					
 					

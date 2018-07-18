@@ -5,7 +5,7 @@ from itemsJuego import *
 
 
 
-def cargarMenu():
+def cargarMenuJugar():
 	
 	#pygame.draw.rect(pantalla, pygame.Color("blue"), (V_ANCHO/3, V_LARGO/9 ,350, 100), 0)
 	
@@ -26,11 +26,6 @@ def cargarMenu():
 		boton.setY(desplY)
 		
 		l_botones.append(boton)
-		
-		pantalla.blit(boton.image, boton.rect)
-	
-	
-	pygame.display.update()
 	
 	return l_botones
 	
@@ -47,6 +42,7 @@ def menuPrincipal():
 	
 	#pantalla.blit(titulo, titulo_rect)
 	
+	estado_menu = 'principal'
 	
 	p_base= pantalla.copy()
 	
@@ -64,7 +60,9 @@ def menuPrincipal():
 	
 	print(pygame.display.Info().current_h)
 	
-	
+	l_botones_juegos = cargarMenuJugar()
+	p_menuP = pantalla.copy()
+	 
 	while True:
 		
 		presionado = None
@@ -78,7 +76,7 @@ def menuPrincipal():
 				
 			elif evento.type == MOUSEBUTTONDOWN and evento.button == 1:
 				
-				if botonJugar.rect.collidepoint(evento.pos[0],evento.pos[1]):
+				if botonJugar.rect.collidepoint(evento.pos[0],evento.pos[1]) and estado_menu == 'principal':
 					
 					presionado = ItemsJuegoGenerica('Imagenes/JugarPresionado.png', 250, 75)
 					presionado.setX(botonJugar.getX())
@@ -89,39 +87,39 @@ def menuPrincipal():
 					pygame.display.update()
 					
 				
-				elif l[0].rect.collidepoint((evento.pos[0],evento.pos[1])):
+				elif l_botones_juegos[0].rect.collidepoint((evento.pos[0],evento.pos[1])):
 					
 					presionado = ItemsJuegoGenerica('Imagenes/botones_presionados/comeVocalesPresionado.png', 250, 75)
-					presionado.setX(l[0].getX())
-					presionado.setY(l[0].getY())
+					presionado.setX(l_botones_juegos[0].getX())
+					presionado.setY(l_botones_juegos[0].getY())
 					
 					pantalla.blit(presionado.image, presionado.rect)
 				
 					
-				elif l[1].rect.collidepoint((evento.pos[0],evento.pos[1])):
+				elif l_botones_juegos[1].rect.collidepoint((evento.pos[0],evento.pos[1])):
 					
 					presionado = ItemsJuegoGenerica('Imagenes/botones_presionados/acomodoYFormoPresionado.png', 250, 75)
-					presionado.setX(l[1].getX())
-					presionado.setY(l[1].getY())
+					presionado.setX(l_botones_juegos[1].getX())
+					presionado.setY(l_botones_juegos[1].getY())
 					
 					pantalla.blit(presionado.image, presionado.rect)					
 					
 					
-				elif l[2].rect.collidepoint((evento.pos[0],evento.pos[1])):
+				elif l_botones_juegos[2].rect.collidepoint((evento.pos[0],evento.pos[1])):
 					
 					presionado = ItemsJuegoGenerica('Imagenes/botones_presionados/elEntrometidoPresionado.png', 250, 75)
-					presionado.setX(l[2].getX())
-					presionado.setY(l[2].getY())
+					presionado.setX(l_botones_juegos[2].getX())
+					presionado.setY(l_botones_juegos[2].getY())
 					
 					pantalla.blit(presionado.image, presionado.rect)					
 					
 				
 				
-				elif l[3].rect.collidepoint((evento.pos[0],evento.pos[1])):
+				elif l_botones_juegos[3].rect.collidepoint((evento.pos[0],evento.pos[1])):
 					
 					presionado = ItemsJuegoGenerica('Imagenes/botones_presionados/enSuLugarPresionado.png', 250, 75)
-					presionado.setX(l[3].getX())
-					presionado.setY(l[3].getY())
+					presionado.setX(l_botones_juegos[3].getX())
+					presionado.setY(l_botones_juegos[3].getY())
 					
 					pantalla.blit(presionado.image, presionado.rect)
 				
@@ -131,18 +129,29 @@ def menuPrincipal():
 					
 					
 			elif evento.type == MOUSEBUTTONUP and evento.button == 1:
-				if botonJugar.rect.collidepoint(evento.pos[0],evento.pos[1]):
+				if botonJugar.rect.collidepoint(evento.pos[0],evento.pos[1]) and estado_menu == 'principal':
 					
 					pantalla.blit(p_base , (0,0))
 					pygame.display.update()
-					l=cargarMenu()
+					
+					for boton in l_botones_juegos:
+						pantalla.blit(boton.image, boton.rect)
+						
 				
-				elif l[0].rect.collidepoint((evento.pos[0],evento.pos[1])):
+					p_jugar = pantalla.copy()
+					estado_menu = 'jugar'
+				
+				elif l_botones_juegos[0].rect.collidepoint((evento.pos[0],evento.pos[1])) and estado_menu == 'jugar' :
+					pantalla.blit(p_base , (0,0))
+					pygame.display.update()
 					comeVocales.main()	
 					
-				#else : 
-					
-				
+				elif estado_menu == 'principal': 
+					#Reestablecer botones cuando se presiona pero se cancela...
+					pantalla.blit(p_menuP, (0,0))
+				elif estado_menu == 'jugar':
+					pantalla.blit(p_jugar, (0,0))
+				pygame.display.update()
 					
 
 def main():

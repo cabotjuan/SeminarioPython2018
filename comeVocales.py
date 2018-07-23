@@ -1,4 +1,4 @@
-import random, os, time, pygame, sys
+import random, os, time, pygame, sys, json
 from pygame.locals import *
 from setup import *
 from itemsJuego import *
@@ -8,9 +8,18 @@ from principal import *
 
 CANT_IMAGENES_PANTALLA = 4
 
+JUEGOTERMINADO = USEREVENT + 2
+
+def displayPuntaje(pts):
+	texto_puntos = ' Puntos:  '+str(pts)
+	fuente = pygame.font.Font(None, 48)
+	puntos = fuente.render(texto_puntos, True, pygame.Color("white"))
+	puntos_rect = puntos.get_rect()
+	puntos_rect.topleft = pantalla.get_rect().topleft
+	pantalla.blit(puntos, puntos_rect)
+	pygame.display.flip()
+
 ###	CARGAR IMG DE LAS VOCALES.
-
-
 
 def cargarVocales(L_Vocales):
 	despl_x = 10
@@ -34,7 +43,7 @@ def cargarObjetos(L_Objetos, L_img):
 	
 	for j in range(CANT_IMAGENES_PANTALLA):
 		
-		i = random.randrange(0, len(L_img)-1)
+		i = random.randrange(0, len(L_img))
 		img = L_img[i]
 		nuevoItem = ItemsJuego('Imagenes/comienzanConVocal/'+img, img[0], 125,125)
 		despl_x += V_ANCHO / 5
@@ -47,13 +56,22 @@ def cargarObjetos(L_Objetos, L_img):
 		
 		del L_img[i]
 
-def main(reproducirSonido):
+def main(reproducirSonido, PuntajeJuego):
+
+	### PUNTAJE DEL JUEGO ACTUAL ###
 	
-	print(reproducirSonido)
+	puntos_total = 0
+	puntos_etapa = 0
+	
+	### FECHA Y HORA DE JUEGO ###
+	
+	PuntajeJuego['Jugado'] = time.asctime( time.localtime(time.time()) )
+	
 	
 	p_base = pantalla.copy()
+	seleccionado = None
 	
-	#pantalla.fill((50,50,50))
+	### CARGA DE BOTONES DISPLAY ###
 	
 	botonSalir = ItemsJuegoGenerica('Imagenes/salir.png', 75, 75)
 	botonSalir.setX(V_ANCHO/24)
@@ -62,8 +80,7 @@ def main(reproducirSonido):
 	
 	botonMusica = ItemsJuegoGenerica('Imagenes/sonido.png', 75, 75)
 	botonMusica.setX(V_ANCHO-60)
-	botonMusica.setY(V_LARGO-75)
-	#pantalla.blit(botonMusica.image, botonMusica.rect)###BOTON MUSICA###
+	botonMusica.setY(V_LARGO-75) ###BOTON MUSICA###
 
 	botonMenu = ItemsJuegoGenerica('Imagenes/inicio.png', 75, 75)
 	botonMenu.setX(V_ANCHO/8)
@@ -74,61 +91,45 @@ def main(reproducirSonido):
 	botonMute.setX(botonMusica.getX())
 	botonMute.setY(botonMusica.getY())
 	
+	if reproducirSonido:
+		pantalla.blit(botonMusica.image, botonMusica.rect) ### BOTON MUSICA ###		
+	else:
+		pantalla.blit(botonMute.image, botonMute.rect) ### BOTON MUTE ###
+
+	### CARGA DE VOCALES EN PANTALLA ###
+	
 	L_Vocales = []
 	cargarVocales(L_Vocales)
-	
-	
-	
-	if reproducirSonido:
-		pantalla.blit(botonMusica.image, botonMusica.rect)###BOTON MUSICA###
-		
-	else:
-		pantalla.blit(botonMute.image, botonMute.rect)###BOTON MUSICA###
-	
 	p_base_vocales = pantalla.copy()
-	fin_juego = False
 	
-	
+	### CARGA DE OBJETOS A ARRASTRAR ###
 	
 	L_Objetos = []
-	
-	
 	L_img = os.listdir('Imagenes/comienzanConVocal')
-	
-	
-	
-	
-	
 	cargarObjetos(L_Objetos, L_img)
-	
-	pygame.display.update()
-	
-	seleccionado = None
-	
 	for i in range(len(L_Objetos)):
-	
 		pantalla.blit(L_Objetos[i].image, L_Objetos[i].rect)
-	
 	p_conObj = pantalla.copy()	
-	
-	## LOOP PRINCIPAL
 
-	if reproducirSonido:
-		pygame.mixer.stop()
-		pantalla.blit(botonMusica.image, botonMusica.rect)
-		#pygame.display.update(botonMusica.rect)
-	else:
-		#pygame.mixer.unpause()
-		pantalla.blit(botonMute.image, botonMute.rect)
-		#pygame.display.update(botonMute.rect)
+	### LOOP PRINCIPAL ###
+	#displayPuntaje(puntos_total)
 	
 	while True:
-		
+		displayPuntaje(puntos_total)
+	
 		Qeventos = pygame.event.get()
 		for evento in Qeventos:
+			
 			if evento.type == QUIT:
 				pygame.quit()
 				sys.exit()
+				
+			elif evento.type == JUEGOTERMINADO:
+				### PANTALLA DE FINALIZADO ###
+				PuntajeJuego['Puntos'] = evento.pts
+				calificar = guardarPuntaje(PuntajeJuego)
+				print(calificar)
+				
 			elif evento.type == MOUSEBUTTONDOWN and evento.button == 1:
 				
 				
@@ -141,7 +142,6 @@ def main(reproducirSonido):
 				if seleccionado:
 					copia_x = seleccionado.getX()
 					copia_y = seleccionado.getY()
-				#print('se selecciono obj')
 				
 				elif botonMusica.rect.collidepoint(evento.pos[0],evento.pos[1]) and reproducirSonido:
 					
@@ -183,17 +183,30 @@ def main(reproducirSonido):
 				
 					index = seleccionado.rect.collidelist(L_Vocales) 
 					
-				
-					
 					if index != -1 and L_Vocales[index].vocal == seleccionado.vocal:
-						#===>Contar puntos aca<===
+						
+						puntos_etapa += 5
+						puntos_total += 5
 						pygame.mixer.Channel(0).play(S_Correcto)
-						print ('borrado'+str(L_Objetos.index(seleccionado)))
+						
 						del L_Objetos[L_Objetos.index(seleccionado)]
 						if not L_Objetos:
-							cargarObjetos(L_Objetos, L_img)	
-						
-					else:
+							
+							if puntos_etapa == 20:
+								puntos_total += 10
+							if not L_img:
+								### JUEGO FINALIZA ###
+								ev_finalizado = pygame.event.Event(JUEGOTERMINADO, pts= puntos_total)
+								pygame.event.post(ev_finalizado)
+							else:
+								### CARGAR IMG SIG ETAPA ###
+								puntos_etapa = 0
+								cargarObjetos(L_Objetos, L_img)	
+							
+					elif L_Vocales[index].vocal != seleccionado.vocal:
+						if puntos_total > 0 and puntos_etapa > 0:
+							puntos_etapa -= 2
+							puntos_total -= 2 
 						pygame.mixer.Channel(0).play(S_Incorrecto)
 						seleccionado.setX(copia_x)
 						seleccionado.setY(copia_y)
@@ -251,8 +264,3 @@ def main(reproducirSonido):
 				
 			
 		pygame.display.update()
-		
-
-if __name__ == '__main__':
-	main(sys.argv[0])
-

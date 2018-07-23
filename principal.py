@@ -1,12 +1,64 @@
-import random, time, pygame, sys, comeVocales, os
+import random, time, pygame, sys, comeVocales, os, json, bisect
 from pygame.locals import *
 from setup import *
 from itemsJuego import *
 #from cargaBotonesFijos import *
 
 
+MAX_PUNTAJE = 150
 
 reproducirSonido= True
+
+PuntajeJuego = {
+	"Juego": None,
+	"Puntos": 0,
+	"Jugado": None
+}
+
+def mostrarPuntaje():
+	arc_ptje = open('Puntaje.json', "r")
+	dic_ptje = json.load(arc_ptje)
+	desp_y = V_LARGO / 5.5
+	
+	for J in dic_ptje:	### ITERO ENTRE LOS 4 JUEGOS ### 
+		texto_juego = J['Juego']+':  '+str(J['Puntos'])+' Puntos'
+		texto_jugado = 'Jugado: '+ J['Jugado']
+		fuente = pygame.font.Font(None, 40)
+		juego = fuente.render(texto_juego.upper(), True, pygame.Color("white"))
+		juego_rect = juego.get_rect()
+		juego_rect.centerx = pantalla.get_rect().centerx
+		juego_rect.y = desp_y
+
+		jugado = fuente.render(texto_jugado.upper(), True, pygame.Color("white"))
+		jugado_rect = jugado.get_rect()
+		jugado_rect.centerx = pantalla.get_rect().centerx
+		jugado_rect.y = desp_y + 30
+
+		pantalla.blit(juego, juego_rect)
+		pantalla.blit(jugado, jugado_rect)
+		desp_y+= V_LARGO / 5.5
+	
+	marco = pygame.draw.rect(pantalla, (0,0,0), (100, 100, V_ANCHO - 200, V_LARGO - 200), 10)
+	arc_ptje.close()
+
+def guardarPuntaje(nuevo_ptje):
+	arc_ptje = open('Puntaje.json', "r")
+	dic_ptje = json.load(arc_ptje)
+
+	for J in dic_ptje:	### ITERO ENTRE LOS 4 JUEGOS ### 
+			if J['Juego'] == nuevo_ptje['Juego']:
+				if nuevo_ptje['Puntos'] >= J['Puntos']:
+					J['Puntos'] = nuevo_ptje['Puntos'] 
+					J['Jugado'] = nuevo_ptje['Jugado'] 
+					
+	arc_ptje.close()			
+	arc_ptje = open('Puntaje.json', "w")
+	json.dump(dic_ptje, arc_ptje)
+	arc_ptje.close()
+		
+	calificaciones  = ["Bien", "Muy Bien", "Excelente"]
+	breakpoints = [0.6, 0.9]
+	return calificaciones[bisect.bisect(breakpoints, MAX_PUNTAJE/nuevo_ptje['Puntos'])]
 
 def cargarMenuJugar():
 	
@@ -103,8 +155,6 @@ def cargarMenuJugar():
 	
 
 def menuPrincipal(reproducirSonido):	
-	
-	
 	
 	itemFondo = ItemsJuegoGenerica('Imagenes/Fondo.jpg', V_ANCHO, V_LARGO)
 	itemFondo.setX(V_ANCHO/2)
@@ -291,28 +341,35 @@ def menuPrincipal(reproducirSonido):
 				
 					####CARGA DE BOTONES JUGAR####
 
-				####ENTRADA A UN JUEGO####
+				elif botonPuntos.rect.collidepoint(evento.pos[0],evento.pos[1]) and estado_menu == 'principal':
+					pantalla.blit(p_base , (0,0))
+					mostrarPuntaje()
+############					
 
+				####ENTRADA A UN JUEGO####					
 				elif l_botones_juegos[0].rect.collidepoint((evento.pos[0],evento.pos[1])) and estado_menu == 'jugar' : 
 					pantalla.blit(p_base , (0,0))
 					pygame.display.update()
-					
-					comeVocales.main(reproducirSonido)	
+					PuntajeJuego['Juego'] = 'Come Vocales'
+					comeVocales.main(reproducirSonido, PuntajeJuego)	
 					
 				#elif l_botones_juegos[1].rect.collidepoint((evento.pos[0],evento.pos[1])) and estado_menu == 'jugar' :
 					#pantalla.blit(p_base , (0,0))
 					#pygame.display.update()
-					#acomodoYFormo.main()	
+					#PuntajeJuego['Juego'] = 'Acomodo y Formo'
+					#acomodoYFormo.main(reproducirSonido, PuntajeJuego)	
 					
 				#elif l_botones_juegos[2].rect.collidepoint((evento.pos[0],evento.pos[1])) and estado_menu == 'jugar' :
 					#pantalla.blit(p_base , (0,0))
+					#PuntajeJuego['Juego'] = 'El Entrometido '
 					#pygame.display.update()
-					#elEntrometido.main()	
+					#elEntrometido.main(reproducirSonido, PuntajeJuego)	
 				
 				#elif l_botones_juegos[3].rect.collidepoint((evento.pos[0],evento.pos[1])) and estado_menu == 'jugar' :
 					#pantalla.blit(p_base , (0,0))
+					#PuntajeJuego['Juego'] = 'En su Lugar'
 					#pygame.display.update()
-					#enSuLugar.main()	
+					#enSuLugar.main(reproducirSonido, PuntajeJuego)	
 
 				####ENTRADA A UN JUEGO####
 							

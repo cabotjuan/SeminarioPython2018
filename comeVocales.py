@@ -10,14 +10,7 @@ CANT_IMAGENES_PANTALLA = 4
 
 JUEGOTERMINADO = USEREVENT + 2
 
-def displayPuntaje(pts):
-	texto_puntos = ' Puntos:  '+str(pts)
-	fuente = pygame.font.Font(None, 48)
-	puntos = fuente.render(texto_puntos, True, pygame.Color("white"))
-	puntos_rect = puntos.get_rect()
-	puntos_rect.topleft = pantalla.get_rect().topleft
-	pantalla.blit(puntos, puntos_rect)
-	pygame.display.flip()
+
 
 ###	CARGAR IMG DE LAS VOCALES.
 
@@ -111,6 +104,7 @@ def main(reproducirSonido, PuntajeJuego):
 		pantalla.blit(L_Objetos[i].image, L_Objetos[i].rect)
 	p_conObj = pantalla.copy()	
 
+	
 	### LOOP PRINCIPAL ###
 	#displayPuntaje(puntos_total)
 	
@@ -204,7 +198,7 @@ def main(reproducirSonido, PuntajeJuego):
 								cargarObjetos(L_Objetos, L_img)	
 							
 					elif L_Vocales[index].vocal != seleccionado.vocal:
-						if puntos_total > 0 and puntos_etapa > 0:
+						if puntos_total > 0 :
 							puntos_etapa -= 2
 							puntos_total -= 2 
 						pygame.mixer.Channel(0).play(S_Incorrecto)

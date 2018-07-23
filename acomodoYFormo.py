@@ -13,7 +13,16 @@ import principal
 CARGARACOMODO = USEREVENT+1
 JUEGOTERMINADO = USEREVENT+2
 
-def main(reproducirSonido):
+def main(reproducirSonido, PuntajeJuego):
+	### PUNTAJE DEL JUEGO ACTUAL ###
+	
+	puntos_total = 0
+	puntos_etapa = 0
+	
+	### FECHA Y HORA DE JUEGO ###
+	
+	PuntajeJuego['Jugado'] = time.asctime( time.localtime(time.time()) )
+	
 	
 	botonSalir = ItemsJuegoGenerica('Imagenes/salir.png', 75, 75)
 	botonSalir.setX(V_ANCHO/24)
@@ -44,8 +53,7 @@ def main(reproducirSonido):
 		pantalla.blit(botonMute.image, botonMute.rect)###BOTON MUSICA###
 	
 	p_base= pantalla.copy()
-	
-	
+	p_con_letras = pantalla.copy()
 	botonOpcionL = ItemsJuegoGenerica('Imagenes/jugar.png', 560, 120)
 	botonOpcionL.setX(V_ANCHO/2)
 	botonOpcionL.setY(V_LARGO/2)
@@ -65,16 +73,19 @@ def main(reproducirSonido):
 	
 	estado = 'elegir opcion'
 
+
 	while True:
-		
+
 		Qeventos = pygame.event.get()
 		for evento in Qeventos:
 			
 			if evento.type == QUIT:
 				pygame.quit()
 				sys.exit()
-				
 			elif evento.type == JUEGOTERMINADO:
+				PuntajeJuego['Puntos'] = evento.pts
+				calificar = principal.guardarPuntaje(PuntajeJuego)
+				print(calificar)
 				print('Termino Acomodo y Formo')
 				pantalla.blit(p_base, (0,0))
 				principal.menuPrincipal(reproducirSonido)
@@ -243,8 +254,9 @@ def main(reproducirSonido):
 					
 					if index != -1 and l_casilleros[index].dato == seleccionado.texto_dato:
 
-						
-
+						puntos_etapa += 5
+						puntos_total += 5
+					
 						pygame.mixer.Channel(0).play(S_Correcto)
 						print('colisiono')
 						#seleccionado.set_x(l_casilleros[index].get_x())
@@ -269,10 +281,13 @@ def main(reproducirSonido):
 						if(Recargar):
 							pantalla.blit(p_base, (0,0))
 							if l_items:
+								if puntos_etapa == 20:
+									puntos_total += 10
+									puntos_etapa = 0
 								ev_acomodo = pygame.event.Event(CARGARACOMODO, opcion='letras')
 								pygame.event.post(ev_acomodo)
 							else:
-								ev_terminado = pygame.event.Event(JUEGOTERMINADO, opcion='letras')
+								ev_terminado = pygame.event.Event(JUEGOTERMINADO, pts= puntos_total)
 								pygame.event.post(ev_terminado)
 						
 						
@@ -288,8 +303,11 @@ def main(reproducirSonido):
 						pygame.draw.rect(pantalla, (255,255,255), (seleccionado.rect), 4)
 						pygame.draw.rect(pantalla, (0,0,0), (seleccionado.rect.x+2, seleccionado.rect.y+2, 47, 47))
 						pantalla.blit(seleccionado.dato_item, seleccionado.dato_item_rect)
-					
+						if puntos_total > 0:
+							puntos_etapa -= 2
+							puntos_total -= 2 
 					else:
+						
 						l_dibujos[ind_obj].mostrar = True
 						pantalla.blit(p_con_letras, (0,0))
 						### VOLVER A SU LUGAR ###
@@ -362,7 +380,7 @@ def main(reproducirSonido):
 				pygame.draw.rect(pantalla, (0,0,0), (seleccionado.rect.x+2, seleccionado.rect.y+2, 47, 47))
 				pantalla.blit(seleccionado.dato_item, seleccionado.dato_item_rect)
 				
-					
+		principal.displayPuntaje(puntos_total)
 		pygame.display.update()
 	
 	

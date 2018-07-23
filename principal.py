@@ -1,4 +1,4 @@
-import random, time, pygame, sys, comeVocales, os, json, bisect
+import random, time, pygame, sys, comeVocales, acomodoYFormo, os, json, bisect
 from pygame.locals import *
 from setup import *
 from itemsJuego import *
@@ -15,6 +15,20 @@ PuntajeJuego = {
 	"Jugado": None
 }
 
+def displayPuntaje(pts):
+	
+	#img = pygame.image.load('Imagenes/jugar.png')
+	Surf = pygame.Surface((200, 50), 0)
+	Surf_Vacia = Surf.copy()
+	texto_puntos = ' Puntos: '+str(pts)
+	fuente = pygame.font.Font(None, 48)
+	puntos = fuente.render(texto_puntos, True, pygame.Color("white"))
+	puntos_rect = puntos.get_rect()
+	puntos_rect.topleft = pantalla.get_rect().topleft
+	Surf_Vacia.blit(puntos, puntos_rect)
+	pantalla.blit(Surf_Vacia, Surf_Vacia.get_rect())
+	pygame.display.flip()
+	
 def mostrarPuntaje():
 	arc_ptje = open('Puntaje.json', "r")
 	dic_ptje = json.load(arc_ptje)
@@ -353,11 +367,11 @@ def menuPrincipal(reproducirSonido):
 					PuntajeJuego['Juego'] = 'Come Vocales'
 					comeVocales.main(reproducirSonido, PuntajeJuego)	
 					
-				#elif l_botones_juegos[1].rect.collidepoint((evento.pos[0],evento.pos[1])) and estado_menu == 'jugar' :
-					#pantalla.blit(p_base , (0,0))
-					#pygame.display.update()
-					#PuntajeJuego['Juego'] = 'Acomodo y Formo'
-					#acomodoYFormo.main(reproducirSonido, PuntajeJuego)	
+				elif l_botones_juegos[1].rect.collidepoint((evento.pos[0],evento.pos[1])) and estado_menu == 'jugar' :
+					pantalla.blit(p_base , (0,0))
+					pygame.display.update()
+					PuntajeJuego['Juego'] = 'Acomodo y Formo'
+					acomodoYFormo.main(reproducirSonido, PuntajeJuego)	
 					
 				#elif l_botones_juegos[2].rect.collidepoint((evento.pos[0],evento.pos[1])) and estado_menu == 'jugar' :
 					#pantalla.blit(p_base , (0,0))

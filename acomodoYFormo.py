@@ -3,6 +3,7 @@ from pygame.locals import *
 from setup import *
 from itemsJuego import *
 import principal
+from separasilabas import *
 
 	
 	
@@ -72,7 +73,7 @@ def main(reproducirSonido, PuntajeJuego):
 	l_dibujos=[]
 	
 	estado = 'elegir opcion'
-
+	opc =''
 
 	while True:
 
@@ -110,7 +111,7 @@ def main(reproducirSonido, PuntajeJuego):
 					
 					for g in range(len(l_letras)):
 						l_letras[g] = l_letras[g].upper()
-						casillero = CasilleroAcomodo(l_letras[g], V_ANCHO/8+desp, V_LARGO/2)
+						casillero = CasilleroAcomodo(l_letras[g], V_ANCHO/8+desp, V_LARGO/2, 50, 50)
 						l_casilleros.append(casillero)
 						desp += 75
 						
@@ -124,7 +125,7 @@ def main(reproducirSonido, PuntajeJuego):
 						
 						k = random.randrange(0, len(l_letras))
 						
-						item = ItemAcomodo(l_letras[k], V_ANCHO/8+desp, V_LARGO/1.5)	
+						item = ItemAcomodo(l_letras[k], V_ANCHO/8+desp, V_LARGO/1.5, 50, 50)	
 						
 						l_dibujos.append(item)
 												
@@ -132,12 +133,35 @@ def main(reproducirSonido, PuntajeJuego):
 						del l_letras[k]
 
 						
-				#elif(evento.opcion == 'silabas'): ### ACOMODAR SILABAS EN SU LUGAR CORRESPONDIENTE ###
+				elif(evento.opcion == 'silabas'): ### ACOMODAR SILABAS EN SU LUGAR CORRESPONDIENTE ###
 					
-					#for s in ##SILABAS##
 					
-						#l_acomodar.append(opcionSilabas(s))
-					
+					nombre_img = os.path.splitext(l_items[i])[0]
+					silabear = silabizer()
+					print(nombre_img)
+					l_silabas = silabear(nombre_img)
+					print(l_silabas)
+					desp = 0
+					for g in range(len(l_silabas)):
+						l_silabas[g] = l_silabas[g]
+						casillero = CasilleroAcomodo(l_silabas[g], V_ANCHO/8+desp, V_LARGO/2, 50, 50)
+						l_casilleros.append(casillero)
+						desp += 75
+						
+					p_casilleros_vacios = pantalla.copy()
+					desp = 0
+
+					for s in range (len(l_silabas)):
+
+						k = random.randrange(0, len(l_silabas))
+						#help(l_silabas[k])
+						item = ItemAcomodo(str(l_silabas[k]), V_ANCHO/8+desp, V_LARGO/1.5, 50, 50)	
+
+						l_dibujos.append(item)
+												
+						desp += 75	
+						del l_silabas[k]
+					print(l_dibujos)
 				
 				del l_items[i] ### CARGA DE IMAGENES DE ITEMS ###	
 				
@@ -249,10 +273,10 @@ def main(reproducirSonido, PuntajeJuego):
 					
 					index = seleccionado.rect.collidelist(l_casilleros) 
 					print(index)
-					print(l_casilleros[index].dato)
-					print(seleccionado.texto_dato)
+					print('l_casilleros.dato'+str(l_casilleros[index].dato))
+					print('seleccionado.dato'+seleccionado.dato)
 					
-					if index != -1 and l_casilleros[index].dato == seleccionado.texto_dato:
+					if index != -1 and str(l_casilleros[index].dato) == seleccionado.dato:
 
 						puntos_etapa += 5
 						puntos_total += 5
@@ -284,14 +308,14 @@ def main(reproducirSonido, PuntajeJuego):
 								if puntos_etapa == 20:
 									puntos_total += 10
 									puntos_etapa = 0
-								ev_acomodo = pygame.event.Event(CARGARACOMODO, opcion='letras')
+								ev_acomodo = pygame.event.Event(CARGARACOMODO, opcion=opc)
 								pygame.event.post(ev_acomodo)
 							else:
 								ev_terminado = pygame.event.Event(JUEGOTERMINADO, pts= puntos_total)
 								pygame.event.post(ev_terminado)
 						
 						
-					elif index != -1 and l_casilleros[index].dato != seleccionado.texto_dato:
+					elif index != -1 and l_casilleros[index].dato != seleccionado.dato:
 						pygame.mixer.Channel(0).play(S_Incorrecto)
 						l_dibujos[ind_obj].mostrar = True
 						pantalla.blit(p_con_letras, (0,0))
@@ -325,19 +349,20 @@ def main(reproducirSonido, PuntajeJuego):
 					pygame.display.update()
 					
 					estado = 'elegida'
-					
-					ev_acomodo = pygame.event.Event(CARGARACOMODO, opcion='letras')
+					opc ='letras'
+					ev_acomodo = pygame.event.Event(CARGARACOMODO, opcion=opc)
 					pygame.event.post(ev_acomodo)	
 					
 					#### IR A MODULO DE JUGAR CON LETRAS ####
 					
-				#elif botonOpcionS.rect.collidepoint(evento.pos[0],evento.pos[1]) and estado == 'elegir opcion':
+				elif botonOpcionS.rect.collidepoint(evento.pos[0],evento.pos[1]) and estado == 'elegir opcion':
 					
-					#pantalla.blit(p_base, (0,0))
-					#pygame.display.update()
-					
-					#ev_acomodo = pygame.event.Event(CARGARACOMODO, opcion='silabas')
-					#pygame.event.post(ev_acomodo)	
+					pantalla.blit(p_base, (0,0))
+					pygame.display.update()
+					estado = 'elegida'
+					opc ='silabas'
+					ev_acomodo = pygame.event.Event(CARGARACOMODO, opcion=opc)
+					pygame.event.post(ev_acomodo)	
 					
 					#### IR A MODULO DE JUGAR CON SILABAS ####
 					
@@ -384,6 +409,6 @@ def main(reproducirSonido, PuntajeJuego):
 		pygame.display.update()
 	
 	
-if __name__ == '__main__':
-	pygame.init()
-	main(sys.argv[0])
+#if __name__ == '__main__':
+	#pygame.init()
+	#main(sys.argv[0])

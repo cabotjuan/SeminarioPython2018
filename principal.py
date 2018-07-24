@@ -17,8 +17,8 @@ PuntajeJuego = {
 
 def displayPuntaje(pts):
 	
-	#img = pygame.image.load('Imagenes/jugar.png')
-	Surf = pygame.Surface((200, 50), 0)
+	img = pygame.image.load('Imagenes/displayPuntos.png')
+	Surf = pygame.transform.scale(img, (200, 50))
 	Surf_Vacia = Surf.copy()
 	texto_puntos = ' Puntos: '+str(pts)
 	fuente = pygame.font.Font(None, 48)

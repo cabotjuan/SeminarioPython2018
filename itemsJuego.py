@@ -13,8 +13,6 @@ class ItemsJuegoGenerica():
 		self.rect = self.image.get_rect()
 		
 		
-		
-		
 	def getX(self):
 		return self.rect.centerx
 	
@@ -55,17 +53,18 @@ class ItemsJuego(ItemsJuegoGenerica):
 		#self.rect.y = y
 
 class CasilleroAcomodo():
-	def __init__(self, dato, posX, posY):
-		self.rect = pygame.draw.rect(pantalla, (255,255,255), (posX, posY, 50, 50), 4)
+	def __init__(self, dato, posX, posY, ancho_b, alto_b):
+		self.rect = pygame.draw.rect(pantalla, (255,255,255), (posX, posY, ancho_b, alto_b), 4)
 		self.dato = dato
+		
+		
 
 class ItemAcomodo(CasilleroAcomodo):
-	def __init__(self, dato, posX, posY):
-		CasilleroAcomodo.__init__(self, dato, posX, posY)
-		self.rect_fig = pygame.draw.rect(pantalla, (0,0,0), (posX+2, posY+2, 47, 47))			
+	def __init__(self, dato, posX, posY, ancho_b, alto_b):
+		CasilleroAcomodo.__init__(self, dato, posX, posY, ancho_b, alto_b)
+		self.rect_fig = pygame.draw.rect(pantalla, (0,0,0), (posX+2, posY+2, ancho_b-3, alto_b-3))			
 		fuente = pygame.font.Font(None, 42)
-		self.texto_dato = dato
-		self.dato_item = fuente.render(self.texto_dato, True, pygame.Color("white"))
+		self.dato_item = fuente.render(self.dato, True, pygame.Color("white"))
 		self.dato_item_rect = self.dato_item.get_rect()
 		self.dato_item_rect.centerx = self.rect.centerx
 		self.dato_item_rect.centery = self.rect.centery

@@ -55,12 +55,12 @@ def main(reproducirSonido, PuntajeJuego):
 	
 	p_base= pantalla.copy()
 	p_con_letras = pantalla.copy()
-	botonOpcionL = ItemsJuegoGenerica('Imagenes/jugar.png', 560, 120)
+	botonOpcionL = ItemsJuegoGenerica('Imagenes/conLetras.png', 560, 120)
 	botonOpcionL.setX(V_ANCHO/2)
 	botonOpcionL.setY(V_LARGO/2)
 	pantalla.blit(botonOpcionL.image, botonOpcionL.rect)###BOTON OPCION DE LETRAS###
 	
-	botonOpcionS = ItemsJuegoGenerica('Imagenes/jugar.png', 560, 120)
+	botonOpcionS = ItemsJuegoGenerica('Imagenes/conSilabas.png', 560, 120)
 	botonOpcionS.setX(V_ANCHO/2)
 	botonOpcionS.setY(V_LARGO/4)
 	pantalla.blit(botonOpcionS.image, botonOpcionS.rect)###BOTON OPCION DE SILABAS###
@@ -172,7 +172,7 @@ def main(reproducirSonido, PuntajeJuego):
 				
 				if botonOpcionL.rect.collidepoint(evento.pos[0],evento.pos[1]) and estado == 'elegir opcion':
 					
-					presionado = ItemsJuegoGenerica('Imagenes/jugarPresionado.png', 560, 120)
+					presionado = ItemsJuegoGenerica('Imagenes/botones_presionados/conLetrasPresionado.png', 560, 120)
 					presionado.setX(botonOpcionL.getX())
 					presionado.setY(botonOpcionL.getY())
 					
@@ -181,7 +181,7 @@ def main(reproducirSonido, PuntajeJuego):
 				
 				elif botonOpcionS.rect.collidepoint(evento.pos[0],evento.pos[1]) and estado == 'elegir opcion':
 					
-					presionado = ItemsJuegoGenerica('Imagenes/jugarPresionado.png', 560, 120)
+					presionado = ItemsJuegoGenerica('Imagenes/botones_presionados/conSilabasPresionado.png', 560, 120)
 					presionado.setX(botonOpcionS.getX())
 					presionado.setY(botonOpcionS.getY())
 					

@@ -276,62 +276,64 @@ def main(reproducirSonido, PuntajeJuego):
 					print('l_casilleros.dato'+str(l_casilleros[index].dato))
 					print('seleccionado.dato'+seleccionado.dato)
 					
-					if index != -1 and str(l_casilleros[index].dato) == seleccionado.dato:
+					if index != -1: 
+						
+						if str(l_casilleros[index].dato) == seleccionado.dato:
 
-						puntos_etapa += 5
-						puntos_total += 5
-					
-						pygame.mixer.Channel(0).play(S_Correcto)
-						print('colisiono')
-						#seleccionado.set_x(l_casilleros[index].get_x())
-						#seleccionado.set_y(l_casilleros[index].get_y())
+							puntos_etapa += 5
+							puntos_total += 5
 						
-						seleccionado.dato_item_rect.centerx = l_casilleros[index].rect.centerx
-						seleccionado.dato_item_rect.centery = l_casilleros[index].rect.centery
-						
-						pantalla.blit(p_casilleros_vacios, (0,0))
-						
-						pantalla.blit(seleccionado.dato_item, seleccionado.dato_item_rect)
-						
-						p_casilleros_vacios = pantalla.copy()
-						
-						pantalla.blit(p_con_letras, (0,0))
-						
-						pantalla.blit(seleccionado.dato_item, seleccionado.dato_item_rect)
-						
-						
-						seleccionado = None
-														
-						if(Recargar):
-							pantalla.blit(p_base, (0,0))
-							if l_items:
-								if puntos_etapa == 20:
-									puntos_total += 10
-									puntos_etapa = 0
-								ev_acomodo = pygame.event.Event(CARGARACOMODO, opcion=opc)
-								pygame.event.post(ev_acomodo)
-							else:
-								ev_terminado = pygame.event.Event(JUEGOTERMINADO, pts= puntos_total)
-								pygame.event.post(ev_terminado)
-						
-						
-					elif index != -1 and l_casilleros[index].dato != seleccionado.dato:
-						pygame.mixer.Channel(0).play(S_Incorrecto)
-						l_dibujos[ind_obj].mostrar = True
-						pantalla.blit(p_con_letras, (0,0))
-						### VOLVER A SU LUGAR ###
-						seleccionado.rect.centerx = copia_x
-						seleccionado.rect.centery = copia_y
-						seleccionado.dato_item_rect.centerx = copia_x
-						seleccionado.dato_item_rect.centery = copia_y											
-						pygame.draw.rect(pantalla, (255,255,255), (seleccionado.rect), 4)
-						pygame.draw.rect(pantalla, (0,0,0), (seleccionado.rect.x+2, seleccionado.rect.y+2, 47, 47))
-						pantalla.blit(seleccionado.dato_item, seleccionado.dato_item_rect)
-						if puntos_total > 0:
-							puntos_etapa -= 2
-							puntos_total -= 2 
-					else:
-						
+							pygame.mixer.Channel(0).play(S_Correcto)
+							print('colisiono')
+							#seleccionado.set_x(l_casilleros[index].get_x())
+							#seleccionado.set_y(l_casilleros[index].get_y())
+							
+							seleccionado.dato_item_rect.centerx = l_casilleros[index].rect.centerx
+							seleccionado.dato_item_rect.centery = l_casilleros[index].rect.centery
+							
+							pantalla.blit(p_casilleros_vacios, (0,0))
+							
+							pantalla.blit(seleccionado.dato_item, seleccionado.dato_item_rect)
+							
+							p_casilleros_vacios = pantalla.copy()
+							
+							pantalla.blit(p_con_letras, (0,0))
+							
+							pantalla.blit(seleccionado.dato_item, seleccionado.dato_item_rect)
+							
+							
+							seleccionado = None
+															
+							if(Recargar):
+								pantalla.blit(p_base, (0,0))
+								if l_items:
+									if puntos_etapa == 20:
+										puntos_total += 10
+										puntos_etapa = 0
+									ev_acomodo = pygame.event.Event(CARGARACOMODO, opcion=opc)
+									pygame.event.post(ev_acomodo)
+								else:
+									ev_terminado = pygame.event.Event(JUEGOTERMINADO, pts= puntos_total)
+									pygame.event.post(ev_terminado)
+							
+							
+						elif l_casilleros[index].dato != seleccionado.dato:
+							pygame.mixer.Channel(0).play(S_Incorrecto)
+							l_dibujos[ind_obj].mostrar = True
+							pantalla.blit(p_con_letras, (0,0))
+							### VOLVER A SU LUGAR ###
+							seleccionado.rect.centerx = copia_x
+							seleccionado.rect.centery = copia_y
+							seleccionado.dato_item_rect.centerx = copia_x
+							seleccionado.dato_item_rect.centery = copia_y											
+							pygame.draw.rect(pantalla, (255,255,255), (seleccionado.rect), 4)
+							pygame.draw.rect(pantalla, (0,0,0), (seleccionado.rect.x+2, seleccionado.rect.y+2, 47, 47))
+							pantalla.blit(seleccionado.dato_item, seleccionado.dato_item_rect)
+							if puntos_total > 0:
+								puntos_etapa -= 2
+								puntos_total -= 2 
+								
+					else:					
 						l_dibujos[ind_obj].mostrar = True
 						pantalla.blit(p_con_letras, (0,0))
 						### VOLVER A SU LUGAR ###

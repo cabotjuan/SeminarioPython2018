@@ -1,0 +1,352 @@
+import random, os, time, pygame, sys
+from pygame.locals import *
+from setup import *
+from itemsJuego import *
+import principal
+
+
+#def cargarImagenes(l_imagenes, l_casilleros, l_nombres):
+	
+	#l_nombres_str = []
+	#desp = 0
+	#desp1 = 0
+	#for i in range(2):
+		
+		#k = random.randrange(0, len(l_imagenes))
+		#nombre = 'Imagenes/enSuLugar/'+str(l_imagenes[k])
+		#imgNueva = ItemsJuegoGenerica(nombre, 125, 125)
+		
+		
+		
+		#imgNueva.setX(V_ANCHO/4 + desp)
+		#imgNueva.setY(V_LARGO/4)
+		
+		#pantalla.blit(imgNueva.image, imgNueva.rect)
+		
+		#casilleroNuevo = CasilleroAcomodo (os.path.splitext(l_imagenes[k])[0],imgNueva.rect.x - 30 ,imgNueva.rect.y + 160, 185, 45)
+		#l_casilleros.append(casilleroNuevo)
+		
+		#l_nombres_str.append(os.path.splitext(l_imagenes[k])[0])
+		
+		#del l_imagenes[k]
+		#desp += V_ANCHO/2
+		
+	#p_sin_nombres = pantalla.copy()
+	
+	#for i in range(len(l_nombres_str)):
+		
+		
+		#nombre_img = ItemAcomodo(l_nombres_str[i], V_ANCHO/2 - 100, V_LARGO/1.5 + desp1 , 185, 45)
+		
+		#l_nombres.append(nombre_img)
+		
+		#desp1 += 120
+	
+CARGARENSULUGAR = USEREVENT+1
+JUEGOTERMINADO = USEREVENT+2
+
+
+def main(reproducirSonido, PuntajeJuego):
+	
+	botonSalir = ItemsJuegoGenerica('Imagenes/salir.png', 75, 75)
+	botonSalir.setX(V_ANCHO/24)
+	botonSalir.setY(V_LARGO-75)
+	
+	botonMusica = ItemsJuegoGenerica('Imagenes/sonido.png', 75, 75)
+	botonMusica.setX(V_ANCHO-60)
+	botonMusica.setY(V_LARGO-75) ###BOTON MUSICA###
+
+	botonMenu = ItemsJuegoGenerica('Imagenes/inicio.png', 75, 75)
+	botonMenu.setX(V_ANCHO/8)
+	botonMenu.setY(V_LARGO-75)
+	
+	botonMute = ItemsJuegoGenerica('Imagenes/mute.png', 75, 75)
+	botonMute.setX(botonMusica.getX())
+	botonMute.setY(botonMusica.getY())
+	
+	pantalla.blit(botonSalir.image, botonSalir.rect)###BOTON SALIR###
+	pantalla.blit(botonMenu.image, botonMenu.rect)###BOTON MENU###
+	
+	if reproducirSonido:
+		pantalla.blit(botonMusica.image, botonMusica.rect)###BOTON MUSICA###
+		
+	else:
+		pantalla.blit(botonMute.image, botonMute.rect)###BOTON MUSICA###
+		
+	p_base = pantalla.copy()	
+	
+	l_imagenes = os.listdir('Imagenes/enSuLugar/')
+	
+	puntos_total = 0
+	puntos_etapa = 0
+	
+	seleccionado = None
+	
+	ev_enSuLugar = pygame.event.Event(CARGARENSULUGAR)
+	pygame.event.post(ev_enSuLugar)
+		
+	while True:
+
+		Qeventos = pygame.event.get()
+		for evento in Qeventos:
+			
+			if evento.type == QUIT:
+				pygame.quit()
+				sys.exit()
+				
+				
+			elif evento.type == JUEGOTERMINADO:
+				PuntajeJuego['Puntos'] = evento.pts
+				calificar = principal.guardarPuntaje(PuntajeJuego)
+				print(calificar)
+				print('Termino Acomodo y Formo')
+				pantalla.blit(p_base, (0,0))
+				principal.menuPrincipal(reproducirSonido)
+				
+				
+			elif evento.type == CARGARENSULUGAR:
+				
+				l_casilleros = []
+				l_nombres = []
+				
+				l_nombres_str = []
+				desp = 0
+				desp1 = 0
+				for i in range(2):
+					
+					k = random.randrange(0, len(l_imagenes))
+					nombre = 'Imagenes/enSuLugar/'+str(l_imagenes[k])
+					imgNueva = ItemsJuegoGenerica(nombre, 125, 125)
+					
+					imgNueva.setX(V_ANCHO/4 + desp)
+					imgNueva.setY(V_LARGO/4)
+					
+					pantalla.blit(imgNueva.image, imgNueva.rect)
+					
+					casilleroNuevo = CasilleroAcomodo (os.path.splitext(l_imagenes[k])[0],imgNueva.rect.x - 30 ,imgNueva.rect.y + 160, 185, 45)
+					l_casilleros.append(casilleroNuevo)
+					
+					l_nombres_str.append(os.path.splitext(l_imagenes[k])[0])
+					
+					del l_imagenes[k]
+					desp += V_ANCHO/2
+					
+				p_sin_nombres = pantalla.copy()
+				
+				for i in range(len(l_nombres_str)):
+					
+					
+					nombre_img = ItemAcomodo(l_nombres_str[i], V_ANCHO/2 - 100, V_LARGO/1.5 + desp1 , 185, 45)
+					
+					l_nombres.append(nombre_img)
+					
+					desp1 += 120
+				
+				
+			elif evento.type == MOUSEBUTTONDOWN and evento.button == 1:
+		
+				
+				if botonMusica.rect.collidepoint(evento.pos[0],evento.pos[1]) and reproducirSonido:
+					
+					presionado = ItemsJuegoGenerica('Imagenes/sonidoPresionado.png', 75, 75)
+					presionado.setX(botonMusica.getX())
+					presionado.setY(botonMusica.getY())
+					
+					pantalla.blit(presionado.image, presionado.rect)
+					
+				elif botonMute.rect.collidepoint(evento.pos[0],evento.pos[1])and not reproducirSonido:
+					
+					presionado = ItemsJuegoGenerica('Imagenes/mutePresionado.png', 75, 75)
+					presionado.setX(botonMute.getX())
+					presionado.setY(botonMute.getY())
+					
+					pantalla.blit(presionado.image, presionado.rect)
+				
+				elif botonSalir.rect.collidepoint(evento.pos[0],evento.pos[1]):
+					
+					presionado = ItemsJuegoGenerica('Imagenes/salirPresionado.png', 75, 75)
+					presionado.setX(botonSalir.getX())
+					presionado.setY(botonSalir.getY())
+					
+					pantalla.blit(presionado.image, presionado.rect)
+				
+				elif botonMenu.rect.collidepoint(evento.pos[0],evento.pos[1]):
+					
+					presionado = ItemsJuegoGenerica('Imagenes/inicioPresionado.png', 75, 75)
+					presionado.setX(botonMenu.getX())
+					presionado.setY(botonMenu.getY())
+					
+					pantalla.blit(presionado.image, presionado.rect)		
+					
+					
+				### VERIFICAR SI SE SELECCIONA ALGUNA PALABRA ###
+				for i in range(len(l_nombres)):
+					
+					if l_nombres[i].rect.collidepoint(evento.pos[0],evento.pos[1]):
+						
+						### SE SELECCIONA PALABRA ###
+						seleccionado = l_nombres[i]
+					
+						i_obj = i
+						
+						l_nombres[i].mostrar = False
+						
+						pantalla.blit(p_sin_nombres, (0,0))
+						
+						
+				if seleccionado:
+					
+					copia_x = seleccionado.dato_item_rect.centerx
+					copia_y = seleccionado.dato_item_rect.centery
+				
+				### DIBUJO TODAS LAS LETRAS RESTANTES ###
+				
+				Recargar = True
+				
+				for h in range(len(l_nombres)):
+					
+					if l_nombres[h].mostrar:
+						Recargar = False
+						pygame.draw.rect(pantalla, (255,255,255), (l_nombres[h].rect), 4)
+						
+						pygame.draw.rect(pantalla, (0,0,0), (l_nombres[h].rect_fig.x, l_nombres[h].rect_fig.y, 183, 42))
+						
+						pantalla.blit(l_nombres[h].dato_item, l_nombres[h].dato_item_rect)
+		
+					
+				p_con_nombres = pantalla.copy()
+				
+				seleccionado.rect.centerx = evento.pos[0]
+				seleccionado.rect.centery = evento.pos[1]
+
+				seleccionado.dato_item_rect.centerx = evento.pos[0]
+				seleccionado.dato_item_rect.centery = evento.pos[1]
+
+				pygame.draw.rect(pantalla, (255,255,255), (seleccionado.rect.x,seleccionado.rect.y ,185, 45), 4)
+				pygame.draw.rect(pantalla, (0,0,0), (seleccionado.rect.x+2, seleccionado.rect.y+2, 183, 42))
+				pantalla.blit(seleccionado.dato_item, seleccionado.dato_item_rect)
+			
+					
+				
+				
+			elif evento.type == MOUSEBUTTONUP and evento.button == 1:
+			
+				if botonMusica.rect.collidepoint(evento.pos[0],evento.pos[1]) and reproducirSonido:
+					pygame.mixer.Channel(0).set_volume(0)
+					pantalla.blit(botonMute.image, botonMute.rect)
+					reproducirSonido = False
+						
+						
+				elif botonMute.rect.collidepoint(evento.pos[0],evento.pos[1])and not reproducirSonido:
+					pygame.mixer.Channel(0).set_volume(1)
+					pantalla.blit(botonMusica.image, botonMusica.rect)
+					reproducirSonido = True
+
+				
+				elif botonSalir.rect.collidepoint(evento.pos[0],evento.pos[1]):
+					
+					terminarPrograma()
+				
+				elif botonMenu.rect.collidepoint(evento.pos[0],evento.pos[1]):
+					
+					pantalla.blit(p_base, (0,0))
+					pygame.display.update()
+					principal.menuPrincipal(reproducirSonido)
+
+								
+				if seleccionado:
+					
+					index = seleccionado.rect.collidelist(l_casilleros) 
+					print(index)
+					print('l_casilleros.dato'+str(l_casilleros[index].dato))
+					print('seleccionado.dato'+seleccionado.dato)
+					
+					if index != -1: 
+						
+						if str(l_casilleros[index].dato) == seleccionado.dato:
+
+							puntos_etapa += 5
+							puntos_total += 5
+						
+							pygame.mixer.Channel(0).play(S_Correcto)
+							print('colisiono')
+							#seleccionado.set_x(l_casilleros[index].get_x())
+							#seleccionado.set_y(l_casilleros[index].get_y())
+							
+							seleccionado.dato_item_rect.centerx = l_casilleros[index].rect.centerx
+							seleccionado.dato_item_rect.centery = l_casilleros[index].rect.centery
+							
+							pantalla.blit(p_sin_nombres, (0,0))
+							
+							pantalla.blit(seleccionado.dato_item, seleccionado.dato_item_rect)
+							
+							p_sin_nombres = pantalla.copy()
+							
+							pantalla.blit(p_con_nombres, (0,0))
+							
+							pantalla.blit(seleccionado.dato_item, seleccionado.dato_item_rect)
+							
+							seleccionado = None
+															
+							if(Recargar):
+								pantalla.blit(p_base, (0,0))
+								if l_imagenes:
+									if puntos_etapa == 20:
+										puntos_total += 10
+										puntos_etapa = 0
+									ev_enSuLugar = pygame.event.Event(CARGARENSULUGAR)
+									pygame.event.post(ev_enSuLugar)
+								else:
+									ev_terminado = pygame.event.Event(JUEGOTERMINADO, pts= puntos_total)
+									pygame.event.post(ev_terminado)
+							
+							
+						elif l_casilleros[index].dato != seleccionado.dato:
+							pygame.mixer.Channel(0).play(S_Incorrecto)
+							l_nombres[i_obj].mostrar = True
+							pantalla.blit(p_con_nombres, (0,0))
+							### VOLVER A SU LUGAR ###
+							seleccionado.rect.centerx = copia_x
+							seleccionado.rect.centery = copia_y
+							seleccionado.dato_item_rect.centerx = copia_x
+							seleccionado.dato_item_rect.centery = copia_y											
+							pygame.draw.rect(pantalla, (255,255,255), (seleccionado.rect), 4)
+							pygame.draw.rect(pantalla, (0,0,0), (seleccionado.rect.x+2, seleccionado.rect.y+2, 182, 42))
+							pantalla.blit(seleccionado.dato_item, seleccionado.dato_item_rect)
+							if puntos_total > 0:
+								puntos_etapa -= 2
+								puntos_total -= 2 
+
+					else:					
+						l_dibujos[ind_obj].mostrar = True
+						pantalla.blit(p_con_letras, (0,0))
+						### VOLVER A SU LUGAR ###
+						seleccionado.rect.centerx = copia_x
+						seleccionado.rect.centery = copia_y
+						seleccionado.dato_item_rect.centerx = copia_x
+						seleccionado.dato_item_rect.centery = copia_y											
+						pygame.draw.rect(pantalla, (255,255,255), (seleccionado.rect), 4)
+						pygame.draw.rect(pantalla, (0,0,0), (seleccionado.rect.x+2, seleccionado.rect.y+2, 182, 42))
+						pantalla.blit(seleccionado.dato_item, seleccionado.dato_item_rect)
+					
+
+
+				seleccionado = None
+				
+			elif evento.type == MOUSEMOTION and seleccionado:
+				
+				pantalla.blit(p_con_nombres, (0,0))
+				
+				seleccionado.rect.centerx = evento.pos[0]
+				seleccionado.rect.centery = evento.pos[1]
+				
+				seleccionado.dato_item_rect.centerx = evento.pos[0]
+				seleccionado.dato_item_rect.centery = evento.pos[1]
+				
+				pygame.draw.rect(pantalla, (255,255,255), (seleccionado.rect.x,seleccionado.rect.y ,185, 45), 4)
+				pygame.draw.rect(pantalla, (0,0,0), (seleccionado.rect.x+2, seleccionado.rect.y+2, 182, 42))
+				pantalla.blit(seleccionado.dato_item, seleccionado.dato_item_rect)
+				
+		principal.displayPuntaje(puntos_total)
+		pygame.display.update()
+

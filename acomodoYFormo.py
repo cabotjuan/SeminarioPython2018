@@ -86,8 +86,13 @@ def main(reproducirSonido, PuntajeJuego):
 			elif evento.type == JUEGOTERMINADO:
 				PuntajeJuego['Puntos'] = evento.pts
 				calificar = principal.guardarPuntaje(PuntajeJuego)
-				print(calificar)
-				print('Termino Acomodo y Formo')
+				calificacionImg = pygame.image.load('Imagenes/'+calificar+'.png')
+				calificacionImgRect = calificacionImg.get_rect()
+				calificacionImgRect.center = (V_ANCHO/2, V_LARGO/2)
+				pantalla.blit(calificacionImg, calificacionImgRect)
+				pygame.display.update()
+				pygame.mixer.Channel(0).play(pygame.mixer.Sound('Sonidos/Terminado.wav'))
+				pygame.time.delay(3000)
 				pantalla.blit(p_base, (0,0))
 				principal.menuPrincipal(reproducirSonido)
 				

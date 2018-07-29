@@ -98,17 +98,21 @@ def main(reproducirSonido, PuntajeJuego):
 			elif evento.type == JUEGOTERMINADO:
 				PuntajeJuego['Puntos'] = evento.pts
 				calificar = principal.guardarPuntaje(PuntajeJuego)
-				print(calificar)
-				print('Termino Acomodo y Formo')
+				calificacionImg = pygame.image.load('Imagenes/'+calificar+'.png')
+				calificacionImgRect = calificacionImg.get_rect()
+				calificacionImgRect.center = (V_ANCHO/2, V_LARGO/2)
+				pantalla.blit(calificacionImg, calificacionImgRect)
+				pygame.display.update()
+				pygame.mixer.Channel(0).play(pygame.mixer.Sound('Sonidos/Terminado.wav'))
+				pygame.time.delay(3000)
 				pantalla.blit(p_base, (0,0))
 				principal.menuPrincipal(reproducirSonido)
-				
 				
 			elif evento.type == CARGARENSULUGAR:
 				
 				l_casilleros = []
 				l_nombres = []
-				
+				l_imgs_pantalla = []
 				l_nombres_str = []
 				desp = 0
 				desp1 = 0
@@ -122,7 +126,7 @@ def main(reproducirSonido, PuntajeJuego):
 					imgNueva.setY(V_LARGO/4)
 					
 					pantalla.blit(imgNueva.image, imgNueva.rect)
-					
+					l_imgs_pantalla.append(imgNueva)
 					casilleroNuevo = CasilleroAcomodo (os.path.splitext(l_imagenes[k])[0],imgNueva.rect.x - 30 ,imgNueva.rect.y + 160, 185, 45)
 					l_casilleros.append(casilleroNuevo)
 					
@@ -201,35 +205,44 @@ def main(reproducirSonido, PuntajeJuego):
 				
 				### DIBUJO TODAS LAS LETRAS RESTANTES ###
 				
-				Recargar = True
-				
-				for h in range(len(l_nombres)):
+					Recargar = True
 					
-					if l_nombres[h].mostrar:
-						Recargar = False
-						pygame.draw.rect(pantalla, (255,255,255), (l_nombres[h].rect), 4)
+					for h in range(len(l_nombres)):
 						
-						pygame.draw.rect(pantalla, (0,0,0), (l_nombres[h].rect_fig.x, l_nombres[h].rect_fig.y, 183, 42))
-						
-						pantalla.blit(l_nombres[h].dato_item, l_nombres[h].dato_item_rect)
-		
-					
-				p_con_nombres = pantalla.copy()
-				
-				seleccionado.rect.centerx = evento.pos[0]
-				seleccionado.rect.centery = evento.pos[1]
-
-				seleccionado.dato_item_rect.centerx = evento.pos[0]
-				seleccionado.dato_item_rect.centery = evento.pos[1]
-
-				pygame.draw.rect(pantalla, (255,255,255), (seleccionado.rect.x,seleccionado.rect.y ,185, 45), 4)
-				pygame.draw.rect(pantalla, (0,0,0), (seleccionado.rect.x+2, seleccionado.rect.y+2, 183, 42))
-				pantalla.blit(seleccionado.dato_item, seleccionado.dato_item_rect)
+						if l_nombres[h].mostrar:
+							Recargar = False
+							pygame.draw.rect(pantalla, (255,255,255), (l_nombres[h].rect), 4)
+							
+							pygame.draw.rect(pantalla, (0,0,0), (l_nombres[h].rect_fig.x, l_nombres[h].rect_fig.y, 183, 42))
+							
+							pantalla.blit(l_nombres[h].dato_item, l_nombres[h].dato_item_rect)
 			
+						
+					p_con_nombres = pantalla.copy()
+					
+					seleccionado.rect.centerx = evento.pos[0]
+					seleccionado.rect.centery = evento.pos[1]
+
+					seleccionado.dato_item_rect.centerx = evento.pos[0]
+					seleccionado.dato_item_rect.centery = evento.pos[1]
+
+					pygame.draw.rect(pantalla, (255,255,255), (seleccionado.rect.x,seleccionado.rect.y ,185, 45), 4)
+					pygame.draw.rect(pantalla, (0,0,0), (seleccionado.rect.x+2, seleccionado.rect.y+2, 183, 42))
+					pantalla.blit(seleccionado.dato_item, seleccionado.dato_item_rect)
+				
 					
 				
 				
 			elif evento.type == MOUSEBUTTONUP and evento.button == 1:
+			
+			
+				for img in l_imgs_pantalla:
+					if img.rect.collidepoint(evento.pos[0],evento.pos[1]):
+						print('ENTRO AL IF COORD')
+						print(img.nombre)
+						S_nombre = pygame.mixer.Sound('Sonidos/nombres/'+img.nombre+'.wav')
+						pygame.mixer.Channel(0).play(S_nombre)
+
 			
 				if botonMusica.rect.collidepoint(evento.pos[0],evento.pos[1]) and reproducirSonido:
 					pygame.mixer.Channel(0).set_volume(0)
@@ -317,9 +330,9 @@ def main(reproducirSonido, PuntajeJuego):
 								puntos_etapa -= 2
 								puntos_total -= 2 
 
-					else:					
-						l_dibujos[ind_obj].mostrar = True
-						pantalla.blit(p_con_letras, (0,0))
+					else:		
+						l_nombres[i_obj].mostrar = True
+						pantalla.blit(p_con_nombres, (0,0))
 						### VOLVER A SU LUGAR ###
 						seleccionado.rect.centerx = copia_x
 						seleccionado.rect.centery = copia_y

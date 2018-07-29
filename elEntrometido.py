@@ -6,6 +6,8 @@ import principal
 
 
 
+JUEGOTERMINADO = USEREVENT + 2
+
 def main(reproducirSonido, PuntajeJuego):
 	
 	
@@ -93,7 +95,18 @@ def main(reproducirSonido, PuntajeJuego):
 				pygame.quit()
 				sys.exit()
 				
-				
+			elif evento.type == JUEGOTERMINADO:
+				PuntajeJuego['Puntos'] = evento.pts
+				calificar = principal.guardarPuntaje(PuntajeJuego)
+				calificacionImg = pygame.image.load('Imagenes/'+calificar+'.png')
+				calificacionImgRect = calificacionImg.get_rect()
+				calificacionImgRect.center = (V_ANCHO/2, V_LARGO/2)
+				pantalla.blit(calificacionImg, calificacionImgRect)
+				pygame.display.update()
+				pygame.mixer.Channel(0).play(pygame.mixer.Sound('Sonidos/Terminado.wav'))
+				pygame.time.delay(3000)
+				pantalla.blit(p_base, (0,0))
+				principal.menuPrincipal(reproducirSonido)
 			
 			elif evento.type == MOUSEBUTTONDOWN and evento.button == 1:
 		
@@ -175,6 +188,21 @@ def main(reproducirSonido, PuntajeJuego):
 						pygame.mixer.Channel(0).play(S_Correcto)
 						
 						pantalla.blit(p_con_imgs, (0,0))
+						
+						
+						### Verificar si FIN DE JUEGO
+						Finalizar = True
+						
+						for img in l_imgs:
+							if img.marca == True and img.vocal != img_fija.vocal:
+								Finalizar = False
+						if Finalizar:
+							p_base = pantalla.copy()
+							pantalla.blit(p_base, (0,0))
+							ev_finalizado = pygame.event.Event(JUEGOTERMINADO, pts= puntos_total)
+							pygame.event.post(ev_finalizado)
+						
+						
 					
 					else:
 						if img_fija.vocal == seleccionado.vocal:

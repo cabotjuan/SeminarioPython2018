@@ -1,4 +1,4 @@
-import random, time, pygame, sys, comeVocales, acomodoYFormo, os, json, bisect
+import random, time, pygame, sys, comeVocales, acomodoYFormo, enSuLugar,os, json, bisect
 from pygame.locals import *
 from setup import *
 from itemsJuego import *
@@ -266,7 +266,7 @@ def menuPrincipal(reproducirSonido):
 				
 					
 				
-				elif l_botones_juegos[0].rect.collidepoint((evento.pos[0],evento.pos[1])):
+				elif l_botones_juegos[0].rect.collidepoint((evento.pos[0],evento.pos[1])) and estado_menu == 'jugar':
 					
 					presionado = ItemsJuegoGenerica('Imagenes/botones_presionados/comeVocalesPresionado.png', 560, 120)
 					presionado.setX(l_botones_juegos[0].getX())
@@ -275,7 +275,7 @@ def menuPrincipal(reproducirSonido):
 					pantalla.blit(presionado.image, presionado.rect)
 				
 					
-				elif l_botones_juegos[1].rect.collidepoint((evento.pos[0],evento.pos[1])):
+				elif l_botones_juegos[1].rect.collidepoint((evento.pos[0],evento.pos[1])) and estado_menu == 'jugar':
 					
 					presionado = ItemsJuegoGenerica('Imagenes/botones_presionados/acomodoYFormoPresionado.png', 560, 120)
 					presionado.setX(l_botones_juegos[1].getX())
@@ -284,7 +284,7 @@ def menuPrincipal(reproducirSonido):
 					pantalla.blit(presionado.image, presionado.rect)					
 					
 					
-				elif l_botones_juegos[2].rect.collidepoint((evento.pos[0],evento.pos[1])):
+				elif l_botones_juegos[2].rect.collidepoint((evento.pos[0],evento.pos[1]))and estado_menu == 'jugar':
 					
 					presionado = ItemsJuegoGenerica('Imagenes/botones_presionados/elEntrometidoPresionado.png', 560, 120)
 					presionado.setX(l_botones_juegos[2].getX())
@@ -294,7 +294,7 @@ def menuPrincipal(reproducirSonido):
 					
 				
 				
-				elif l_botones_juegos[3].rect.collidepoint((evento.pos[0],evento.pos[1])):
+				elif l_botones_juegos[3].rect.collidepoint((evento.pos[0],evento.pos[1]))and estado_menu == 'jugar':
 					
 					presionado = ItemsJuegoGenerica('Imagenes/botones_presionados/enSuLugarPresionado.png', 560, 120)
 					presionado.setX(l_botones_juegos[3].getX())
@@ -379,15 +379,14 @@ def menuPrincipal(reproducirSonido):
 					#pygame.display.update()
 					#elEntrometido.main(reproducirSonido, PuntajeJuego)	
 				
-				#elif l_botones_juegos[3].rect.collidepoint((evento.pos[0],evento.pos[1])) and estado_menu == 'jugar' :
-					#pantalla.blit(p_base , (0,0))
-					#PuntajeJuego['Juego'] = 'En su Lugar'
-					#pygame.display.update()
-					#enSuLugar.main(reproducirSonido, PuntajeJuego)	
+				elif l_botones_juegos[3].rect.collidepoint((evento.pos[0],evento.pos[1])) and estado_menu == 'jugar' :
+					pantalla.blit(p_base , (0,0))
+					PuntajeJuego['Juego'] = 'En su Lugar'
+					pygame.display.update()
+					enSuLugar.main(reproducirSonido, PuntajeJuego)	
 
 				####ENTRADA A UN JUEGO####
-							
-
+				
 				elif botonMusica.rect.collidepoint(evento.pos[0],evento.pos[1]) and reproducirSonido:
 					
 					pantalla.blit(botonMute.image, botonMute.rect)
@@ -397,8 +396,7 @@ def menuPrincipal(reproducirSonido):
 						
 					pantalla.blit(botonMusica.image, botonMusica.rect)
 					reproducirSonido= True
-						
-					
+			
 				elif botonSalir.rect.collidepoint(evento.pos[0],evento.pos[1]):
 					
 					terminarPrograma()

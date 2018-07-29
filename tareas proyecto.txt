@@ -5,13 +5,35 @@ JUEGOS
     CADA UNA EN SU LUGAR: asociar palabras en la imagen que corresponde.
 
 
-- Menu principal:
-    - Botones:
-        . Musica -- > ON off
-        . jugar
-            . Elegir juegos
-        . salir 
+
+
+AYUDAS JUEGOS --- Explicacion del juego.
+              --- Click en img, Leer nombre por voz. 
+
+COME VOCALES --- CORREGIR IMAGEN AL ARRASTRAR.
+
+FUENTE DE IMAGENES
+    openclipart.org
+    freegraphics.org
+   Botones y fondos personalizados
+    tipografia Gaegu de google Fonts
+
+
+DOCSTRING <----- Documentar
+
+EL ENTROMETIDO --- HACER     
+        
+    L_OBJ               traer todas los obj(img) del disco.
+    OBJ_BASE            obj random de la lista.
+    4 OBJ +             4 obj random de la lista. (ir descartando).
     
-    - mostrar MAX puntaje de c/juego 
- 
+    selecccionado       obj seleccionado, si al arrastrar sobre tacho ... seleccionado.letra = OBJ_BASE.letra --> Correcto. eliminar de pantalla.
+                                                                          sino --> Incorrecto. devolver a su posicion.
     
+
+
+
+CADA UNA EN SU LUGAR    --- HACER
+
+
+

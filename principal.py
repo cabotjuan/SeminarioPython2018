@@ -387,7 +387,6 @@ def menuPrincipal(reproducirSonido):
 
 				####ENTRADA A UN JUEGO####
 				
-				
 				elif botonMusica.rect.collidepoint(evento.pos[0],evento.pos[1]) and reproducirSonido:
 					
 					pantalla.blit(botonMute.image, botonMute.rect)
@@ -397,8 +396,7 @@ def menuPrincipal(reproducirSonido):
 						
 					pantalla.blit(botonMusica.image, botonMusica.rect)
 					reproducirSonido= True
-						
-					
+			
 				elif botonSalir.rect.collidepoint(evento.pos[0],evento.pos[1]):
 					
 					terminarPrograma()

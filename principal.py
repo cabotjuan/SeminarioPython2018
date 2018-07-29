@@ -1,4 +1,4 @@
-import random, time, pygame, sys, comeVocales, acomodoYFormo, enSuLugar,os, json, bisect
+import random, time, pygame, sys, comeVocales, acomodoYFormo, enSuLugar,os, json, bisect, elEntrometido
 from pygame.locals import *
 from setup import *
 from itemsJuego import *
@@ -373,11 +373,11 @@ def menuPrincipal(reproducirSonido):
 					PuntajeJuego['Juego'] = 'Acomodo y Formo'
 					acomodoYFormo.main(reproducirSonido, PuntajeJuego)	
 					
-				#elif l_botones_juegos[2].rect.collidepoint((evento.pos[0],evento.pos[1])) and estado_menu == 'jugar' :
-					#pantalla.blit(p_base , (0,0))
-					#PuntajeJuego['Juego'] = 'El Entrometido '
-					#pygame.display.update()
-					#elEntrometido.main(reproducirSonido, PuntajeJuego)	
+				elif l_botones_juegos[2].rect.collidepoint((evento.pos[0],evento.pos[1])) and estado_menu == 'jugar' :
+					pantalla.blit(p_base , (0,0))
+					PuntajeJuego['Juego'] = 'El Entrometido '
+					pygame.display.update()
+					elEntrometido.main(reproducirSonido, PuntajeJuego)	
 				
 				elif l_botones_juegos[3].rect.collidepoint((evento.pos[0],evento.pos[1])) and estado_menu == 'jugar' :
 					pantalla.blit(p_base , (0,0))

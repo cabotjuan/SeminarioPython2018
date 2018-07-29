@@ -246,7 +246,7 @@ def main(reproducirSonido, PuntajeJuego):
 						pygame.mixer.Channel(0).set_volume(0)
 						pantalla.blit(botonMute.image, botonMute.rect)
 						reproducirSonido = False
-					
+
 				elif botonMute.rect.collidepoint(evento.pos[0],evento.pos[1])and not reproducirSonido:
 						pygame.mixer.Channel(0).set_volume(1)
 						pantalla.blit(botonSonido.image, botonSonido.rect)

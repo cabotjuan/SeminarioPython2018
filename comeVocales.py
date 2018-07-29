@@ -71,9 +71,10 @@ def main(reproducirSonido, PuntajeJuego):
 	botonSalir.setY(V_LARGO-75)
 	pantalla.blit(botonSalir.image, botonSalir.rect)###BOTON SALIR###
 	
-	botonMusica = ItemsJuegoGenerica('Imagenes/sonido.png', 75, 75)
-	botonMusica.setX(V_ANCHO-60)
-	botonMusica.setY(V_LARGO-75) ###BOTON MUSICA###
+	botonSonido = ItemsJuegoGenerica('Imagenes/sonido.png', 75, 75)
+	botonSonido.setX(V_ANCHO-60)
+	botonSonido.setY(V_LARGO-75) ###BOTON MUSICA###
+
 
 	botonMenu = ItemsJuegoGenerica('Imagenes/inicio.png', 75, 75)
 	botonMenu.setX(V_ANCHO/8)
@@ -81,11 +82,11 @@ def main(reproducirSonido, PuntajeJuego):
 	pantalla.blit(botonMenu.image, botonMenu.rect)###BOTON MENU###
 	
 	botonMute = ItemsJuegoGenerica('Imagenes/mute.png', 75, 75)
-	botonMute.setX(botonMusica.getX())
-	botonMute.setY(botonMusica.getY())
+	botonMute.setX(botonSonido.getX())
+	botonMute.setY(botonSonido.getY())
 	
 	if reproducirSonido:
-		pantalla.blit(botonMusica.image, botonMusica.rect) ### BOTON MUSICA ###		
+		pantalla.blit(botonSonido.image, botonSonido.rect) ### BOTON MUSICA ###		
 	else:
 		pantalla.blit(botonMute.image, botonMute.rect) ### BOTON MUTE ###
 
@@ -122,7 +123,15 @@ def main(reproducirSonido, PuntajeJuego):
 				### PANTALLA DE FINALIZADO ###
 				PuntajeJuego['Puntos'] = evento.pts
 				calificar = guardarPuntaje(PuntajeJuego)
-				print(calificar)
+				calificacionImg = pygame.image.load('Imagenes/'+calificar+'.png')
+				calificacionImgRect = calificacionImg.get_rect()
+				calificacionImgRect.center = (V_ANCHO/2, V_LARGO/2)
+				pantalla.blit(calificacionImg, calificacionImgRect)
+				pygame.display.update()
+				pygame.mixer.Channel(0).play(pygame.mixer.Sound('Sonidos/Terminado.wav'))
+				pygame.time.delay(3000)
+				pantalla.blit(p_base, (0,0))
+				menuPrincipal(reproducirSonido)
 				
 			elif evento.type == MOUSEBUTTONDOWN and evento.button == 1:
 				
@@ -131,17 +140,18 @@ def main(reproducirSonido, PuntajeJuego):
 					
 					if L_Objetos[i].rect.collidepoint((evento.pos[0],evento.pos[1])):
 						seleccionado = L_Objetos[i]
+						print(seleccionado.nombre)
 						ind_obj = i
 					
 				if seleccionado:
 					copia_x = seleccionado.getX()
 					copia_y = seleccionado.getY()
 				
-				elif botonMusica.rect.collidepoint(evento.pos[0],evento.pos[1]) and reproducirSonido:
+				elif botonSonido.rect.collidepoint(evento.pos[0],evento.pos[1]) and reproducirSonido:
 					
 					presionado = ItemsJuegoGenerica('Imagenes/sonidoPresionado.png', 75, 75)
-					presionado.setX(botonMusica.getX())
-					presionado.setY(botonMusica.getY())
+					presionado.setX(botonSonido.getX())
+					presionado.setY(botonSonido.getY())
 					
 					pantalla.blit(presionado.image, presionado.rect)
 					
@@ -174,57 +184,72 @@ def main(reproducirSonido, PuntajeJuego):
 			elif evento.type == MOUSEBUTTONUP and evento.button == 1:
 			
 				if seleccionado:
-				
+					
+
+						
 					index = seleccionado.rect.collidelist(L_Vocales) 
 					
-					if index != -1 and L_Vocales[index].vocal == seleccionado.vocal:
-						
-						puntos_etapa += 5
-						puntos_total += 5
-						pygame.mixer.Channel(0).play(S_Correcto)
-						
-						del L_Objetos[L_Objetos.index(seleccionado)]
-						if not L_Objetos:
+					print('ANTES AL IF COORD')
+					print('vocal: '+seleccionado.vocal)
+					print('index: '+str(index))
+					
+					if index != -1:
+						if L_Vocales[index].vocal == seleccionado.vocal:
 							
-							if puntos_etapa == 20:
-								puntos_total += 10
-							if not L_img:
-								### JUEGO FINALIZA ###
-								ev_finalizado = pygame.event.Event(JUEGOTERMINADO, pts= puntos_total)
-								pygame.event.post(ev_finalizado)
-							else:
-								### CARGAR IMG SIG ETAPA ###
-								puntos_etapa = 0
-								cargarObjetos(L_Objetos, L_img)	
+							puntos_etapa += 5
+							puntos_total += 5
+							pygame.mixer.Channel(0).play(S_Correcto)
 							
-					elif L_Vocales[index].vocal != seleccionado.vocal:
-						if puntos_total > 0 :
-							puntos_etapa -= 2
-							puntos_total -= 2 
-						pygame.mixer.Channel(0).play(S_Incorrecto)
-						seleccionado.setX(copia_x)
-						seleccionado.setY(copia_y)
+							del L_Objetos[L_Objetos.index(seleccionado)]
+							if not L_Objetos:
+								
+								if puntos_etapa == 20:
+									puntos_total += 10
+								if not L_img:
+									### JUEGO FINALIZA ###
+									ev_finalizado = pygame.event.Event(JUEGOTERMINADO, pts= puntos_total)
+									pygame.event.post(ev_finalizado)
+								else:
+									### CARGAR IMG SIG ETAPA ###
+									puntos_etapa = 0
+									cargarObjetos(L_Objetos, L_img)	
+								
+						elif  L_Vocales[index].vocal != seleccionado.vocal:
+							if puntos_total > 0 :
+								puntos_etapa -= 2
+								puntos_total -= 2 
+							pygame.mixer.Channel(0).play(S_Incorrecto)
+					else:
+						### LEER NOMBRE DE IMAGEN ###
+						if seleccionado.getX() == copia_x and seleccionado.getY() == copia_y:
+							print('ENTRO AL IF COORD')
+							print(seleccionado.nombre)
+							S_nombre = pygame.mixer.Sound('Sonidos/nombres/'+seleccionado.nombre+'.wav')
+							pygame.mixer.Channel(0).play(S_nombre)
+					
+					seleccionado.setX(copia_x)
+					seleccionado.setY(copia_y)
 						
 					
 						
 					pantalla.blit(p_base_vocales,(0,0))		
 						
 					if reproducirSonido:
-						pantalla.blit(botonMusica.image, botonMusica.rect)
-						#pygame.display.update(botonMusica.rect)
+						pantalla.blit(botonSonido.image, botonSonido.rect)
+						#pygame.display.update(botonSonido.rect)
 					else:
 						pantalla.blit(botonMute.image, botonMute.rect)
 						#pygame.display.update(botonMute.rect)
 					
 				
-				elif botonMusica.rect.collidepoint(evento.pos[0],evento.pos[1]) and reproducirSonido:
+				elif botonSonido.rect.collidepoint(evento.pos[0],evento.pos[1]) and reproducirSonido:
 						pygame.mixer.Channel(0).set_volume(0)
 						pantalla.blit(botonMute.image, botonMute.rect)
 						reproducirSonido = False
 					
 				elif botonMute.rect.collidepoint(evento.pos[0],evento.pos[1])and not reproducirSonido:
 						pygame.mixer.Channel(0).set_volume(1)
-						pantalla.blit(botonMusica.image, botonMusica.rect)
+						pantalla.blit(botonSonido.image, botonSonido.rect)
 						reproducirSonido = True
 
 				

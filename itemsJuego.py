@@ -1,4 +1,4 @@
-import pygame
+import pygame, os
 from pygame.locals import *
 from setup import *
 class ItemsJuegoGenerica():
@@ -7,8 +7,11 @@ class ItemsJuegoGenerica():
 		
 		self.escX = esc_x
 		self.escY = esc_y
-		img = pygame.image.load(img)
-		self.image = pygame.transform.scale(img, (self.escX, self.escY)) ### CAMBIE DE 100 A 125
+		self.img = pygame.image.load(img)
+		print(os.path.splitext(img)[0])
+		print(os.path.basename(os.path.splitext(img)[0]))
+		self.nombre = os.path.basename(os.path.splitext(img)[0])
+		self.image = pygame.transform.scale(self.img, (self.escX, self.escY)) ### CAMBIE DE 100 A 125
 		
 		self.rect = self.image.get_rect()
 		

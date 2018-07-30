@@ -21,3 +21,7 @@ S_Click = pygame.mixer.Sound('Sonidos/Click.wav')
 S_Correcto = pygame.mixer.Sound('Sonidos/Correcto.wav')
 S_Incorrecto = pygame.mixer.Sound('Sonidos/Incorrecto.wav')
 
+M_Constante = pygame.mixer.music.load('Sonidos/MusicaPrincipal.ogg')
+
+
+

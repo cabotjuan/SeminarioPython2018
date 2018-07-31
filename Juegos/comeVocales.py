@@ -1,7 +1,7 @@
 import random, os, time, pygame, sys, json
 from pygame.locals import *
-from setup import *
-from itemsJuego import *
+from Juegos.setup import *
+from Juegos.itemsJuego import *
 from principal import *
 
 
@@ -10,11 +10,10 @@ CANT_IMAGENES_PANTALLA = 4
 
 JUEGOTERMINADO = USEREVENT + 2
 
-
-
 ###	CARGAR IMG DE LAS VOCALES.
 
 def cargarVocales(L_Vocales):
+	""" Se cargan las imagenes de las vocales en una Lista de objetos ItemsJuego(). """
 	despl_x = 10
 	for imgVocal in os.listdir('Imagenes/vocales'):
 		
@@ -31,6 +30,7 @@ def cargarVocales(L_Vocales):
 ## CARGAR LA IMG DE LOS OBJETOS A ARRASTRAR.
 def cargarObjetos(L_Objetos, L_img):
 	
+	""" Se cargan las imagenes de los objetos a arrastrar. se guardan en una Lista de objetos ItemsJuego(). """
 	
 	despl_x = 10
 	
@@ -51,6 +51,8 @@ def cargarObjetos(L_Objetos, L_img):
 
 def main(reproducirSonido, PuntajeJuego, reproducirMusica):
 
+	""" Come Vocales. Se Inicializan puntajes, se carga: carteles, botones de display, imagenes de Vocales y objetos a arrastrar. """
+
 	### PUNTAJE DEL JUEGO ACTUAL ###
 	
 	puntos_total = 0
@@ -60,7 +62,19 @@ def main(reproducirSonido, PuntajeJuego, reproducirMusica):
 	
 	PuntajeJuego['Jugado'] = time.asctime( time.localtime(time.time()) )
 	
-	
+
+	fondo_t = pygame.draw.rect(pantalla, (0,0,0), (V_ANCHO - 350, 20, 350, 120), 4)
+	fuente = pygame.font.Font("Fuentes/Gaegu-Regular.ttf", 28)
+	t = fuente.render('ARRASTRA LAS IMAGENES', True, pygame.Color("white"))
+	t_rect = t.get_rect()
+	t_rect.centerx = fondo_t.centerx
+	t_rect.centery = fondo_t.y + 30
+	pantalla.blit(t, t_rect)
+	t = fuente.render('A SUS VOCALES INCIALES', True, pygame.Color("white"))
+	t_rect = t.get_rect()
+	t_rect.centerx = fondo_t.centerx
+	t_rect.centery = fondo_t.y + 70
+	pantalla.blit(t, t_rect)
 	p_base = pantalla.copy()
 	seleccionado = None
 	

@@ -1,8 +1,9 @@
 import pygame, os
 from pygame.locals import *
-from setup import *
+from Juegos.setup import *
+
 class ItemsJuegoGenerica():
-	
+	""" Utilizada en todos los juegos para crear objetos Items que dispongan de una Imagen base. """
 	def __init__(self, img, esc_x, esc_y):
 		
 		self.escX = esc_x
@@ -29,7 +30,7 @@ class ItemsJuegoGenerica():
 		self.rect.y = y
 		
 class ItemsJuego(ItemsJuegoGenerica):
-	
+	""" Sub-Clase de ItemsJuegoGenerica utilizada para guardar vocal de comienzo y marca de "Visible". """
 	def __init__(self, img, vocal, esc_x, esc_y):
 		
 		ItemsJuegoGenerica.__init__(self, img, esc_x, esc_y)
@@ -56,6 +57,7 @@ class ItemsJuego(ItemsJuegoGenerica):
 		#self.rect.y = y
 
 class CasilleroAcomodo():
+	""" utilizada en juego Acomodo y Formo para dibujar casilleros vacios de Silabas & Letras. """
 	def __init__(self, dato, posX, posY, ancho_b, alto_b):
 		self.rect = pygame.draw.rect(pantalla, (255,255,255), (posX, posY, ancho_b, alto_b), 4)
 		self.dato = dato
@@ -63,6 +65,7 @@ class CasilleroAcomodo():
 		
 
 class ItemAcomodo(CasilleroAcomodo):
+	""" utilizada en juego Acomodo y Formo para dibujar casilleros vacios de Silabas & Letras. """
 	def __init__(self, dato, posX, posY, ancho_b, alto_b):
 		CasilleroAcomodo.__init__(self, dato, posX, posY, ancho_b, alto_b)
 		self.rect_fig = pygame.draw.rect(pantalla, (0,0,0), (posX+2, posY+2, ancho_b-3, alto_b-3))			

@@ -1,52 +1,20 @@
 import random, os, time, pygame, sys
 from pygame.locals import *
-from setup import *
-from itemsJuego import *
+from Juegos.setup import *
+from Juegos.itemsJuego import *
 import principal
 
 
-#def cargarImagenes(l_imagenes, l_casilleros, l_nombres):
-	
-	#l_nombres_str = []
-	#desp = 0
-	#desp1 = 0
-	#for i in range(2):
-		
-		#k = random.randrange(0, len(l_imagenes))
-		#nombre = 'Imagenes/enSuLugar/'+str(l_imagenes[k])
-		#imgNueva = ItemsJuegoGenerica(nombre, 125, 125)
-		
-		
-		
-		#imgNueva.setX(V_ANCHO/4 + desp)
-		#imgNueva.setY(V_LARGO/4)
-		
-		#pantalla.blit(imgNueva.image, imgNueva.rect)
-		
-		#casilleroNuevo = CasilleroAcomodo (os.path.splitext(l_imagenes[k])[0],imgNueva.rect.x - 30 ,imgNueva.rect.y + 160, 185, 45)
-		#l_casilleros.append(casilleroNuevo)
-		
-		#l_nombres_str.append(os.path.splitext(l_imagenes[k])[0])
-		
-		#del l_imagenes[k]
-		#desp += V_ANCHO/2
-		
-	#p_sin_nombres = pantalla.copy()
-	
-	#for i in range(len(l_nombres_str)):
-		
-		
-		#nombre_img = ItemAcomodo(l_nombres_str[i], V_ANCHO/2 - 100, V_LARGO/1.5 + desp1 , 185, 45)
-		
-		#l_nombres.append(nombre_img)
-		
-		#desp1 += 120
 	
 CARGARENSULUGAR = USEREVENT+1
 JUEGOTERMINADO = USEREVENT+2
 
 
 def main(reproducirSonido, PuntajeJuego, reproducirMusica):
+
+	"""Carga botones de display. Muestra cuadro con ayuda. Carga imagenes y sus nombres.
+	Revision de eventos en bucle.
+	"""
 	
 	botonSalir = ItemsJuegoGenerica('Imagenes/salir.png', 75, 75)
 	botonSalir.setX(V_ANCHO/24)
@@ -87,8 +55,26 @@ def main(reproducirSonido, PuntajeJuego, reproducirMusica):
 	else:
 		pantalla.blit(botonMusicaMute.image, botonMusicaMute.rect)###BOTON MUSICA###	
 	
-		
+	
+	### CARTEL AYUDA ###
+	
+	fondo_t = pygame.draw.rect(pantalla, (0,0,0), (V_ANCHO - 370, 20, 350, 120), 4)
+	fuente = pygame.font.Font("Fuentes/Gaegu-Regular.ttf", 28)
+	t = fuente.render('ARRASTRA EL NOMBRE', True, pygame.Color("white"))
+	t_rect = t.get_rect()
+	t_rect.centerx = fondo_t.centerx
+	t_rect.centery = fondo_t.centery - 20
+	pantalla.blit(t, t_rect)
+	t = fuente.render('A SU LUGAR', True, pygame.Color("white"))
+	t_rect = t.get_rect()
+	t_rect.centerx = fondo_t.centerx
+	t_rect.centery = fondo_t.centery +20
+	pantalla.blit(t, t_rect)	
+	
+	
+	
 	p_base = pantalla.copy()	
+	
 	
 	l_imagenes = os.listdir('Imagenes/enSuLugar/')
 	

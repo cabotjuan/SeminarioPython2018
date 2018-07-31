@@ -1,7 +1,7 @@
 import random, os, time, pygame, sys
 from pygame.locals import *
-from setup import *
-from itemsJuego import *
+from Juegos.setup import *
+from Juegos.itemsJuego import *
 import principal
 
 
@@ -10,6 +10,8 @@ JUEGOTERMINADO = USEREVENT + 2
 
 def main(reproducirSonido, PuntajeJuego, reproducirMusica):
 	
+	"""Muestra botones de display. Escribe cuadro con ayuda. Carga imagen fija e imagenes movibles.
+	Suma o resta puntos. Revision de eventos en bucle infinito"""
 	
 	puntos_total = 0
 	PuntajeJuego['Jugado'] = time.asctime( time.localtime(time.time()) )
@@ -53,19 +55,51 @@ def main(reproducirSonido, PuntajeJuego, reproducirMusica):
 	else:
 		pantalla.blit(botonMusicaMute.image, botonMusicaMute.rect)###BOTON MUSICA###
 	
+	
 	l_fijas = os.listdir('Imagenes/ElEntrometido/imgFijas/')
 	fija = random.choice(l_fijas)
 	print(fija)
 	img_fija = ItemsJuego('Imagenes/ElEntrometido/imgFijas/'+fija, fija[0], 160, 160)
-	img_fija.setX(V_ANCHO/6)
+	img_fija.setX(V_ANCHO/3)
 	img_fija.setY(V_LARGO/1.7)
 	
+	###	CARTEL TACHO ###
+	
+	fondo_t = pygame.draw.rect(pantalla, (0,0,0), (85, V_LARGO/2, 350, 240), 4)
+	fuente = pygame.font.Font("Fuentes/Gaegu-Regular.ttf", 28)
+	t = fuente.render('TIRA AL TACHO', True, pygame.Color("white"))
+	t_rect = t.get_rect()
+	t_rect.x = fondo_t.x + 10
+	t_rect.centery = fondo_t.centery -80
+	pantalla.blit(t, t_rect)
+	t = fuente.render('LO QUE NO', True, pygame.Color("white"))
+	t_rect = t.get_rect()
+	t_rect.x = fondo_t.x + 10
+	t_rect.centery = fondo_t.centery  -40
+	pantalla.blit(t, t_rect)
+	t = fuente.render('EMPIECE CON', True, pygame.Color("white"))
+	t_rect = t.get_rect()
+	t_rect.x = fondo_t.x + 10
+	t_rect.centery = fondo_t.centery 
+	pantalla.blit(t, t_rect)
+	t = fuente.render('DE', True, pygame.Color("white"))
+	t_rect = t.get_rect()
+	t_rect.x = fondo_t.x + 50
+	t_rect.centery = fondo_t.centery + 65
+	pantalla.blit(t, t_rect)
+	fuente = pygame.font.Font("Fuentes/Gaegu-Bold.ttf", 60)
+	t = fuente.render(fija[0].upper(), True, pygame.Color("white"))
+	t_rect = t.get_rect()
+	t_rect.x = fondo_t.x + 10
+	t_rect.centery = fondo_t.centery + 65
+	pantalla.blit(t, t_rect)
 	pantalla.blit(img_fija.image, img_fija.rect)	
+	
 	p_base = pantalla.copy()
 	
 	
 	img_tacho = ItemsJuegoGenerica('Imagenes/tacho.png', 170, 300)
-	img_tacho.setX(V_ANCHO/2)
+	img_tacho.setX(V_ANCHO/1.7)
 	img_tacho.setY(V_LARGO/2)
 	
 	SupTacho = img_tacho.image.convert_alpha()

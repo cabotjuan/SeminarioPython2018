@@ -1,20 +1,22 @@
 import random, os, time, pygame, sys
 from pygame.locals import *
-from setup import *
-from itemsJuego import *
+from Juegos.setup import *
+from Juegos.itemsJuego import *
 import principal
-from separasilabas import *
-
-	
-	
-#def opcionSilabas(reproducirSonido)	:
-	
-	#######################
+from Juegos.separasilabas import *
 
 CARGARACOMODO = USEREVENT+1
 JUEGOTERMINADO = USEREVENT+2
 
 def main(reproducirSonido, PuntajeJuego, reproducirMusica):
+
+
+	""" Acomodo y Formo. Se Inicializa puntaje, carga de botones display y opciones de juego internas. 
+		Se muestra cartel ayuda. Se cargan las imagenes segun la opcion(Silabas o Letras).  
+		Revision de eventos en bucle infinito.
+	"""
+
+
 	### PUNTAJE DEL JUEGO ACTUAL ###
 	
 	puntos_total = 0
@@ -67,9 +69,14 @@ def main(reproducirSonido, PuntajeJuego, reproducirMusica):
 	else:
 		pantalla.blit(botonMusicaMute.image, botonMusicaMute.rect)###BOTON MUSICA###
 		
+
+	
+	
 	
 	
 	p_base= pantalla.copy()
+	
+	
 	p_con_letras = pantalla.copy()
 	botonOpcionL = ItemsJuegoGenerica('Imagenes/conLetras.png', 560, 120)
 	botonOpcionL.setX(V_ANCHO/2)
@@ -114,6 +121,26 @@ def main(reproducirSonido, PuntajeJuego, reproducirMusica):
 				
 			elif evento.type == CARGARACOMODO:
 
+				### CARTEL AYUDA ###
+
+				fondo_t = pygame.draw.rect(pantalla, (0,0,0), (V_ANCHO - 350, 100, 300, 100), 4)
+				fuente = pygame.font.Font("Fuentes/Gaegu-Regular.ttf", 28)
+				if evento.opcion == 'letras':
+					t = fuente.render('ACOMODA LAS LETRAS', True, pygame.Color("white"))
+				elif evento.opcion == 'silabas':
+					t = fuente.render('ACOMODA LAS SILABAS', True, pygame.Color("white"))
+
+				t_rect = t.get_rect()
+				t_rect.centerx = fondo_t.centerx
+				t_rect.centery = fondo_t.y + 30
+				pantalla.blit(t, t_rect)
+				t = fuente.render('Y FORMA LA PALABRA', True, pygame.Color("white"))
+				t_rect = t.get_rect()
+				t_rect.centerx = fondo_t.centerx
+				t_rect.centery = fondo_t.y + 60
+				pantalla.blit(t, t_rect)
+				
+				p_base = pantalla.copy()
 
 				
 					
@@ -128,6 +155,8 @@ def main(reproducirSonido, PuntajeJuego, reproducirMusica):
 				pantalla.blit(item.image, item.rect)
 				
 				if(evento.opcion == 'letras'): ### ACOMODAR LETRAS EN SU LUGAR CORRESPONDIENTE ###
+					
+
 					desp = 0
 					
 					l_letras= list(os.path.splitext(l_items[i])[0])
@@ -159,7 +188,6 @@ def main(reproducirSonido, PuntajeJuego, reproducirMusica):
 						
 				elif(evento.opcion == 'silabas'): ### ACOMODAR SILABAS EN SU LUGAR CORRESPONDIENTE ###
 					
-					
 					nombre_img = os.path.splitext(l_items[i])[0]
 					silabear = silabizer()
 					print(nombre_img)
@@ -167,7 +195,7 @@ def main(reproducirSonido, PuntajeJuego, reproducirMusica):
 					print(l_silabas)
 					desp = 0
 					for g in range(len(l_silabas)):
-						l_silabas[g] = l_silabas[g].upper()
+						l_silabas[g] = str(l_silabas[g]).upper()
 						casillero = CasilleroAcomodo(l_silabas[g], V_ANCHO/8+desp, V_LARGO/2, 50, 50)
 						l_casilleros.append(casillero)
 						desp += 75
@@ -287,10 +315,12 @@ def main(reproducirSonido, PuntajeJuego, reproducirMusica):
 					
 					Recargar = True
 					
+					
 					for h in range(len(l_dibujos)):
 						
 						if l_dibujos[h].mostrar:
 							Recargar = False
+					
 							pygame.draw.rect(pantalla, (255,255,255), (l_dibujos[h].rect), 4)
 							
 							pygame.draw.rect(pantalla, (0,0,0), (l_dibujos[h].rect_fig.x, l_dibujos[h].rect_fig.y, 47, 47))
@@ -364,9 +394,22 @@ def main(reproducirSonido, PuntajeJuego, reproducirMusica):
 							
 							
 							seleccionado = None
-															
+							
+							
+							#Recargar = True
+							
+							#for h in range(len(l_dibujos)):
+								
+								#if l_dibujos[h].mostrar:
+									#Recargar = False
+							
+																
 							if(Recargar):
+								pygame.display.flip()
+								pygame.time.delay(1000)
+							
 								pantalla.blit(p_base, (0,0))
+								
 								if l_items:
 									if puntos_etapa == 20:
 										puntos_total += 10

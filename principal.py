@@ -1,25 +1,7 @@
-''' '''
-
-
-
-
-
-
-
-
-
-
-
-
-
-import random, time, pygame, sys, comeVocales, acomodoYFormo, enSuLugar,os, json, bisect, elEntrometido
+import random, time, pygame, sys, os, json, bisect, Juegos.comeVocales, Juegos.acomodoYFormo, Juegos.enSuLugar, Juegos.elEntrometido
 from pygame.locals import *
-from setup import *
-from itemsJuego import *
-#from cargaBotonesFijos import *
-
-
-
+from Juegos.setup import *
+from Juegos.itemsJuego import *
 
 reproducirSonido= True
 reproducirMusica= True
@@ -38,12 +20,14 @@ PuntajeJuego = {
 	}
 
 def displayPuntaje(pts):
-	
+
+	"""Muestra en la pantalla un marcador de puntaje. Recibe los puntos actuales del juego. """
+
 	img = pygame.image.load('Imagenes/displayPuntos.png')
 	Surf = pygame.transform.scale(img, (200, 50))
 	Surf_Vacia = Surf.copy()
-	texto_puntos = ' Puntos: '+str(pts)
-	fuente = pygame.font.Font(None, 48)
+	texto_puntos = ' PUNTOS:'+str(pts)
+	fuente = pygame.font.Font("Fuentes/Gaegu-Bold.ttf", 36)
 	puntos = fuente.render(texto_puntos, True, pygame.Color("white"))
 	puntos_rect = puntos.get_rect()
 	puntos_rect.topleft = pantalla.get_rect().topleft
@@ -52,6 +36,9 @@ def displayPuntaje(pts):
 	pygame.display.flip()
 	
 def mostrarPuntaje():
+	
+	"""Muestra en pantalla una tabla de puntajes de todos los juegos"""
+	
 	arc_ptje = open('Puntaje.json', "r")
 	dic_ptje = json.load(arc_ptje)
 	desp_y = V_LARGO / 5.5
@@ -59,7 +46,7 @@ def mostrarPuntaje():
 	for J in dic_ptje:	### ITERO ENTRE LOS 4 JUEGOS ### 
 		texto_juego = J['Juego']+':  '+str(J['Puntos'])+' Puntos'
 		texto_jugado = 'Jugado: '+ J['Jugado']
-		fuente = pygame.font.Font(None, 40)
+		fuente = pygame.font.Font("Fuentes/Gaegu-Bold.ttf", 40)
 		juego = fuente.render(texto_juego.upper(), True, pygame.Color("white"))
 		juego_rect = juego.get_rect()
 		juego_rect.centerx = pantalla.get_rect().centerx
@@ -78,6 +65,9 @@ def mostrarPuntaje():
 	arc_ptje.close()
 
 def guardarPuntaje(nuevo_ptje):
+
+	"""Guarda el puntaje de un determinado juego en Puntaje.json. Recibe un dic de puntaje"""
+
 	try:
 		arc_ptje = open('Puntaje.json', "r")
 		dic_ptje = json.load(arc_ptje)
@@ -107,6 +97,8 @@ def guardarPuntaje(nuevo_ptje):
 
 def cargarMenuJugar():
 	
+	"""Carga del menu con los botones de cada Juego. """
+	
 	l_botones =[]
 	desplY = -50
 	for boton in sorted(os.listdir('Imagenes/botones')):
@@ -124,11 +116,13 @@ def cargarMenuJugar():
 
 
 def menuPrincipal(reproducirSonido, reproducirMusica):	
+		
+	"""Menu principal del programa. Botones JUGAR, MIS PUNTOS, """
 	
 	itemFondo = ItemsJuegoGenerica('Imagenes/Fondo.jpg', V_ANCHO, V_LARGO)
 	itemFondo.setX(V_ANCHO/2)
 	itemFondo.setY(0)
-	
+	55
 	pantalla.blit (itemFondo.image, itemFondo.rect)
 	pygame.display.update()
 	
@@ -355,32 +349,31 @@ def menuPrincipal(reproducirSonido, reproducirMusica):
 						pantalla.blit(botonMusicaMute.image, botonMusicaMute.rect)
 					
 					mostrarPuntaje()
-############					
 
 				####ENTRADA A UN JUEGO####					
 				elif l_botones_juegos[0].rect.collidepoint((evento.pos[0],evento.pos[1])) and estado_menu == 'jugar' : 
 					pantalla.blit(p_base , (0,0))
 					pygame.display.update()
 					PuntajeJuego['Juego'] = 'Come Vocales'
-					comeVocales.main(reproducirSonido, PuntajeJuego, reproducirMusica)	
+					Juegos.comeVocales.main(reproducirSonido, PuntajeJuego, reproducirMusica)	
 					
 				elif l_botones_juegos[1].rect.collidepoint((evento.pos[0],evento.pos[1])) and estado_menu == 'jugar' :
 					pantalla.blit(p_base , (0,0))
 					pygame.display.update()
 					PuntajeJuego['Juego'] = 'Acomodo y Formo'
-					acomodoYFormo.main(reproducirSonido, PuntajeJuego, reproducirMusica)	
+					Juegos.acomodoYFormo.main(reproducirSonido, PuntajeJuego, reproducirMusica)	
 					
 				elif l_botones_juegos[2].rect.collidepoint((evento.pos[0],evento.pos[1])) and estado_menu == 'jugar' :
 					pantalla.blit(p_base , (0,0))
 					PuntajeJuego['Juego'] = 'El Entrometido'
 					pygame.display.update()
-					elEntrometido.main(reproducirSonido, PuntajeJuego, reproducirMusica)	
+					Juegos.elEntrometido.main(reproducirSonido, PuntajeJuego, reproducirMusica)	
 				
 				elif l_botones_juegos[3].rect.collidepoint((evento.pos[0],evento.pos[1])) and estado_menu == 'jugar' :
 					pantalla.blit(p_base , (0,0))
 					PuntajeJuego['Juego'] = 'En su Lugar'
 					pygame.display.update()
-					enSuLugar.main(reproducirSonido, PuntajeJuego, reproducirMusica)	
+					Juegos.enSuLugar.main(reproducirSonido, PuntajeJuego, reproducirMusica)	
 
 				####ENTRADA A UN JUEGO####
 				
@@ -448,14 +441,11 @@ def menuPrincipal(reproducirSonido, reproducirMusica):
 				
 			pygame.display.update()
 
-
-
 def main():
+	"""Se llama a menu principal para poder acceder a cada juego."""
 	pygame.init()
 	global reproducirSonido
 	menuPrincipal(reproducirSonido, reproducirMusica)
 	
-
-
 if __name__ == '__main__':
     main()
